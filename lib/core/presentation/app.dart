@@ -8,7 +8,13 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _appRouter = AppRouter();
+
+    _appRouter.pushAndPopUntil(
+      const WordleRoute(),
+      predicate: (route) => false,
+    );
     return MaterialApp.router(
+      theme: ThemeData.dark(),
       routerDelegate: _appRouter.delegate(),
       routeInformationParser: _appRouter.defaultRouteParser(),
     );
