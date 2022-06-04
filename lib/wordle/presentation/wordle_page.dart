@@ -40,21 +40,38 @@ class WordlePage extends ConsumerWidget {
                       },
                       gameOver: (value) {
                         return [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "GameOver",
-                              style: Theme.of(context).textTheme.headline4,
-                            ),
+                          Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "GameOver",
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  value.hasGuessed
+                                      ? "You Guessed it!"
+                                      : "Too bad...\n you didn't guess the word.",
+                                  style: Theme.of(context).textTheme.headline5,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  value.word.toUpperCase(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline4!
+                                      .copyWith(color: Colors.green),
+                                ),
+                              ),
+                              Guesses(value.guesses),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "The Word was: ${value.word}",
-                              style: Theme.of(context).textTheme.headline4,
-                            ),
-                          ),
-                          Guesses(value.guesses),
                           ElevatedButton(
                             onPressed: () {
                               ref.read(wordleProvider.notifier).startGame();
