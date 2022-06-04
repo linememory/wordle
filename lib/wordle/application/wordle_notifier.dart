@@ -8,6 +8,7 @@ class WorldeNotifier extends StateNotifier<WordleState> {
   WorldeNotifier(this.wordsRepository) : super(const WordleState.initial());
 
   final WordsRepository wordsRepository;
+  final int maxGuesses = 6;
 
   Future<void> startGame() async {
     final wordOrFailure = await wordsRepository.getRandomWord();
@@ -48,8 +49,9 @@ class WorldeNotifier extends StateNotifier<WordleState> {
     state.maybeMap(
       game: (value) {
         if (value.word == value.guesses.last.word) {
-          state = WordleState.gameOver(value.word, value.guesses);
-        } else if (value.guesses.length >= 5) {
+          state =
+              WordleState.gameOver(value.word, value.guesses, hasGuessed: true);
+        } else if (value.guesses.length >= maxGuesses) {
           state = WordleState.gameOver(value.word, value.guesses);
         }
       },
@@ -65,7 +67,10 @@ class WordleState with _$WordleState {
     String word, [
     @Default([]) List<Guess> guesses,
   ]) = _Game;
-  const factory WordleState.gameOver(String word, List<Guess> guesses) =
-      _GameOver;
+  const factory WordleState.gameOver(
+    String word,
+    List<Guess> guesses, {
+    @Default(false) bool hasGuessed,
+  }) = _GameOver;
   const factory WordleState.failure([String? errorMessage]) = _Failure;
 }

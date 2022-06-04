@@ -20,7 +20,8 @@ mixin _$WordleState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function(String word, List<Guess> guesses) game,
-    required TResult Function(String word, List<Guess> guesses) gameOver,
+    required TResult Function(String word, List<Guess> guesses, bool hasGuessed)
+        gameOver,
     required TResult Function(String? errorMessage) failure,
   }) =>
       throw _privateConstructorUsedError;
@@ -28,7 +29,8 @@ mixin _$WordleState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(String word, List<Guess> guesses)? game,
-    TResult Function(String word, List<Guess> guesses)? gameOver,
+    TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
+        gameOver,
     TResult Function(String? errorMessage)? failure,
   }) =>
       throw _privateConstructorUsedError;
@@ -36,7 +38,8 @@ mixin _$WordleState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(String word, List<Guess> guesses)? game,
-    TResult Function(String word, List<Guess> guesses)? gameOver,
+    TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
+        gameOver,
     TResult Function(String? errorMessage)? failure,
     required TResult orElse(),
   }) =>
@@ -125,7 +128,8 @@ class _$_Initial implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function(String word, List<Guess> guesses) game,
-    required TResult Function(String word, List<Guess> guesses) gameOver,
+    required TResult Function(String word, List<Guess> guesses, bool hasGuessed)
+        gameOver,
     required TResult Function(String? errorMessage) failure,
   }) {
     return initial();
@@ -136,7 +140,8 @@ class _$_Initial implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(String word, List<Guess> guesses)? game,
-    TResult Function(String word, List<Guess> guesses)? gameOver,
+    TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
+        gameOver,
     TResult Function(String? errorMessage)? failure,
   }) {
     return initial?.call();
@@ -147,7 +152,8 @@ class _$_Initial implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(String word, List<Guess> guesses)? game,
-    TResult Function(String word, List<Guess> guesses)? gameOver,
+    TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
+        gameOver,
     TResult Function(String? errorMessage)? failure,
     required TResult orElse(),
   }) {
@@ -279,7 +285,8 @@ class _$_Game implements _Game {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function(String word, List<Guess> guesses) game,
-    required TResult Function(String word, List<Guess> guesses) gameOver,
+    required TResult Function(String word, List<Guess> guesses, bool hasGuessed)
+        gameOver,
     required TResult Function(String? errorMessage) failure,
   }) {
     return game(word, guesses);
@@ -290,7 +297,8 @@ class _$_Game implements _Game {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(String word, List<Guess> guesses)? game,
-    TResult Function(String word, List<Guess> guesses)? gameOver,
+    TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
+        gameOver,
     TResult Function(String? errorMessage)? failure,
   }) {
     return game?.call(word, guesses);
@@ -301,7 +309,8 @@ class _$_Game implements _Game {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(String word, List<Guess> guesses)? game,
-    TResult Function(String word, List<Guess> guesses)? gameOver,
+    TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
+        gameOver,
     TResult Function(String? errorMessage)? failure,
     required TResult orElse(),
   }) {
@@ -363,7 +372,7 @@ abstract class _$$_GameOverCopyWith<$Res> {
   factory _$$_GameOverCopyWith(
           _$_GameOver value, $Res Function(_$_GameOver) then) =
       __$$_GameOverCopyWithImpl<$Res>;
-  $Res call({String word, List<Guess> guesses});
+  $Res call({String word, List<Guess> guesses, bool hasGuessed});
 }
 
 /// @nodoc
@@ -380,6 +389,7 @@ class __$$_GameOverCopyWithImpl<$Res> extends _$WordleStateCopyWithImpl<$Res>
   $Res call({
     Object? word = freezed,
     Object? guesses = freezed,
+    Object? hasGuessed = freezed,
   }) {
     return _then(_$_GameOver(
       word == freezed
@@ -390,6 +400,10 @@ class __$$_GameOverCopyWithImpl<$Res> extends _$WordleStateCopyWithImpl<$Res>
           ? _value._guesses
           : guesses // ignore: cast_nullable_to_non_nullable
               as List<Guess>,
+      hasGuessed: hasGuessed == freezed
+          ? _value.hasGuessed
+          : hasGuessed // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -397,7 +411,9 @@ class __$$_GameOverCopyWithImpl<$Res> extends _$WordleStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_GameOver implements _GameOver {
-  const _$_GameOver(this.word, final List<Guess> guesses) : _guesses = guesses;
+  const _$_GameOver(this.word, final List<Guess> guesses,
+      {this.hasGuessed = false})
+      : _guesses = guesses;
 
   @override
   final String word;
@@ -409,8 +425,12 @@ class _$_GameOver implements _GameOver {
   }
 
   @override
+  @JsonKey()
+  final bool hasGuessed;
+
+  @override
   String toString() {
-    return 'WordleState.gameOver(word: $word, guesses: $guesses)';
+    return 'WordleState.gameOver(word: $word, guesses: $guesses, hasGuessed: $hasGuessed)';
   }
 
   @override
@@ -419,14 +439,17 @@ class _$_GameOver implements _GameOver {
         (other.runtimeType == runtimeType &&
             other is _$_GameOver &&
             const DeepCollectionEquality().equals(other.word, word) &&
-            const DeepCollectionEquality().equals(other._guesses, _guesses));
+            const DeepCollectionEquality().equals(other._guesses, _guesses) &&
+            const DeepCollectionEquality()
+                .equals(other.hasGuessed, hasGuessed));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(word),
-      const DeepCollectionEquality().hash(_guesses));
+      const DeepCollectionEquality().hash(_guesses),
+      const DeepCollectionEquality().hash(hasGuessed));
 
   @JsonKey(ignore: true)
   @override
@@ -438,10 +461,11 @@ class _$_GameOver implements _GameOver {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function(String word, List<Guess> guesses) game,
-    required TResult Function(String word, List<Guess> guesses) gameOver,
+    required TResult Function(String word, List<Guess> guesses, bool hasGuessed)
+        gameOver,
     required TResult Function(String? errorMessage) failure,
   }) {
-    return gameOver(word, guesses);
+    return gameOver(word, guesses, hasGuessed);
   }
 
   @override
@@ -449,10 +473,11 @@ class _$_GameOver implements _GameOver {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(String word, List<Guess> guesses)? game,
-    TResult Function(String word, List<Guess> guesses)? gameOver,
+    TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
+        gameOver,
     TResult Function(String? errorMessage)? failure,
   }) {
-    return gameOver?.call(word, guesses);
+    return gameOver?.call(word, guesses, hasGuessed);
   }
 
   @override
@@ -460,12 +485,13 @@ class _$_GameOver implements _GameOver {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(String word, List<Guess> guesses)? game,
-    TResult Function(String word, List<Guess> guesses)? gameOver,
+    TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
+        gameOver,
     TResult Function(String? errorMessage)? failure,
     required TResult orElse(),
   }) {
     if (gameOver != null) {
-      return gameOver(word, guesses);
+      return gameOver(word, guesses, hasGuessed);
     }
     return orElse();
   }
@@ -509,11 +535,12 @@ class _$_GameOver implements _GameOver {
 }
 
 abstract class _GameOver implements WordleState {
-  const factory _GameOver(final String word, final List<Guess> guesses) =
-      _$_GameOver;
+  const factory _GameOver(final String word, final List<Guess> guesses,
+      {final bool hasGuessed}) = _$_GameOver;
 
   String get word => throw _privateConstructorUsedError;
   List<Guess> get guesses => throw _privateConstructorUsedError;
+  bool get hasGuessed => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   _$$_GameOverCopyWith<_$_GameOver> get copyWith =>
       throw _privateConstructorUsedError;
@@ -585,7 +612,8 @@ class _$_Failure implements _Failure {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function(String word, List<Guess> guesses) game,
-    required TResult Function(String word, List<Guess> guesses) gameOver,
+    required TResult Function(String word, List<Guess> guesses, bool hasGuessed)
+        gameOver,
     required TResult Function(String? errorMessage) failure,
   }) {
     return failure(errorMessage);
@@ -596,7 +624,8 @@ class _$_Failure implements _Failure {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(String word, List<Guess> guesses)? game,
-    TResult Function(String word, List<Guess> guesses)? gameOver,
+    TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
+        gameOver,
     TResult Function(String? errorMessage)? failure,
   }) {
     return failure?.call(errorMessage);
@@ -607,7 +636,8 @@ class _$_Failure implements _Failure {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function(String word, List<Guess> guesses)? game,
-    TResult Function(String word, List<Guess> guesses)? gameOver,
+    TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
+        gameOver,
     TResult Function(String? errorMessage)? failure,
     required TResult orElse(),
   }) {
