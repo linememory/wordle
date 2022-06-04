@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/services.dart';
 
@@ -6,20 +5,22 @@ abstract class WordsDatasource {
   Future<String> getRandomWord();
 }
 
-class JsonWordsDatasource implements WordsDatasource {
-  List<dynamic>? cachedWords;
+class FileWordsDatasource implements WordsDatasource {
+  List<String>? cachedWords;
 
   final String assetPath;
 
-  JsonWordsDatasource(this.assetPath);
+  FileWordsDatasource(this.assetPath);
 
   @override
   Future<String> getRandomWord() async {
-    final String rawData = await rootBundle.loadString(assetPath);
-    final List<dynamic> words =
-        cachedWords ?? jsonDecode(rawData) as List<dynamic>;
+    final words = cachedWords ??
+        await rootBundle.loadStructuredData(
+          assetPath,
+          (value) async => value.split(','),
+        );
     cachedWords = words;
-    final int rnd = Random().nextInt(words.length);
-    return Future.value(words[rnd].toString());
+    final int rnd = Random().nextInt(words!.length);
+    return Future.value(words[rnd]);
   }
 }

@@ -4,11 +4,11 @@ import 'package:wordle/wordle/infrastructure/words_datasource.dart';
 import 'package:wordle/wordle/infrastructure/words_repository.dart';
 
 final assetPathProvider = Provider<String>((ref) {
-  return 'assets/words.json';
+  return 'assets/en.txt';
 });
 
 final wordsDatasourceProvider = Provider<WordsDatasource>((ref) {
-  return JsonWordsDatasource(ref.watch(assetPathProvider));
+  return FileWordsDatasource(ref.watch(assetPathProvider));
 });
 
 final wordsRepositoryProvider = Provider<WordsRepository>((ref) {
