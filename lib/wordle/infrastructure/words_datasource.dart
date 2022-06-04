@@ -19,8 +19,9 @@ class FileWordsDatasource implements WordsDatasource {
           assetPath,
           (value) async => value.split(','),
         );
+    words!.removeWhere((word) => word.length != 5);
     cachedWords = words;
-    final int rnd = Random().nextInt(words!.length);
+    final int rnd = Random().nextInt(words.length);
     return Future.value(words[rnd]);
   }
 }
