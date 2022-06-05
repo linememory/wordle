@@ -9,7 +9,6 @@ class WordlePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final wordle = ref.watch(wordleProvider);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -24,82 +23,107 @@ class WordlePage extends ConsumerWidget {
                 const SizedBox(
                   height: 16,
                 ),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: wordle.map(
-                      initial: (value) {
-                        ref.read(wordleProvider.notifier).startGame();
-                        return [const CircularProgressIndicator()];
-                      },
-                      game: (value) {
-                        return [
-                          Guesses(value.guesses),
-                          const GuessInput(),
-                        ];
-                      },
-                      gameOver: (value) {
-                        return [
-                          Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "GameOver",
-                                  style: Theme.of(context).textTheme.headline4,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  value.hasGuessed
-                                      ? "You Guessed it!"
-                                      : "Too bad...\n you didn't guess the word.",
-                                  style: Theme.of(context).textTheme.headline5,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  value.word.toUpperCase(),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline4!
-                                      .copyWith(color: Colors.green),
-                                ),
-                              ),
-                              Guesses(value.guesses),
-                            ],
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              ref.read(wordleProvider.notifier).startGame();
-                            },
-                            child: const Text('Play Again!'),
-                          ),
-                        ];
-                      },
-                      failure: (value) {
-                        return [
-                          Text('Failure: ${value.errorMessage}'),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              ref.read(wordleProvider.notifier).startGame();
-                            },
-                            child: const Text('Try Again!'),
-                          ),
-                        ];
-                      },
-                    ),
-                  ),
-                ),
+                const Game(),
+                const SizedBox(
+                  height: 50,
+                )
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class Game extends ConsumerWidget {
+  const Game({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final wordle = ref.watch(wordleProvider);
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: wordle.map(
+          initial: (value) {
+            ref.read(wordleProvider.notifier).startGame();
+            return [const CircularProgressIndicator()];
+          },
+          game: (value) {
+            if (value.invalidGuess) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Guess not a valid word"),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              });
+            }
+            return [
+              Guesses(value.guesses),
+              const GuessInput(),
+            ];
+          },
+          gameOver: (value) {
+            return [
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "GameOver",
+                      style: Theme.of(context).textTheme.headline4,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      value.hasGuessed
+                          ? "You Guessed it!"
+                          : "Too bad...\n you didn't guess the word.",
+                      style: Theme.of(context).textTheme.headline5,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      value.word.toUpperCase(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline4!
+                          .copyWith(color: Colors.green),
+                    ),
+                  ),
+                  Guesses(value.guesses),
+                ],
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  ref.read(wordleProvider.notifier).startGame();
+                },
+                child: const Text('Play Again!'),
+              ),
+            ];
+          },
+          failure: (value) {
+            return [
+              Text('Failure: ${value.errorMessage}'),
+              const SizedBox(
+                height: 16,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  ref.read(wordleProvider.notifier).startGame();
+                },
+                child: const Text('Try Again!'),
+              ),
+            ];
+          },
         ),
       ),
     );

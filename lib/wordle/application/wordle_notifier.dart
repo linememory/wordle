@@ -1,13 +1,16 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wordle/wordle/domain/guess.dart';
+import 'package:wordle/wordle/infrastructure/dictionary_repository.dart';
 import 'package:wordle/wordle/infrastructure/words_repository.dart';
 part 'wordle_notifier.freezed.dart';
 
 class WorldeNotifier extends StateNotifier<WordleState> {
-  WorldeNotifier(this.wordsRepository) : super(const WordleState.initial());
+  WorldeNotifier(this.wordsRepository, this.dictionaryRepository)
+      : super(const WordleState.initial());
 
   final WordsRepository wordsRepository;
+  final DictionaryRepository dictionaryRepository;
   final int maxGuesses = 6;
 
   Future<void> startGame() async {
@@ -18,16 +21,24 @@ class WorldeNotifier extends StateNotifier<WordleState> {
     );
   }
 
-  void addGuess(String guessWord) {
+  Future<void> addGuess(String guessWord) async {
     state.maybeMap(
-      game: (value) {
-        state = value.copyWith(
-          guesses: List.from(value.guesses)
-            ..add(
-              _getGuessWithMatches(value.word, guessWord),
-            ),
-        );
-        chackIfGuessed();
+      game: (value) async {
+        if (await dictionaryRepository.isValid(guessWord)) {
+          state = value.copyWith(
+            invalidGuess: false,
+            guesses: List.from(value.guesses)
+              ..add(
+                _getGuessWithMatches(value.word, guessWord),
+              ),
+          );
+          chackIfGuessed();
+        } else {
+          state = value.copyWith(
+            invalidGuess: true,
+            guesses: List.from(value.guesses),
+          );
+        }
       },
       orElse: () {},
     );
@@ -64,9 +75,10 @@ class WorldeNotifier extends StateNotifier<WordleState> {
 class WordleState with _$WordleState {
   const factory WordleState.initial() = _Initial;
   const factory WordleState.game(
-    String word, [
+    String word, {
     @Default([]) List<Guess> guesses,
-  ]) = _Game;
+    @Default(false) bool invalidGuess,
+  }) = _Game;
   const factory WordleState.gameOver(
     String word,
     List<Guess> guesses, {
