@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wordle/wordle/domain/guess.dart';
 import 'package:wordle/wordle/presentation/guess_widget.dart';
+import 'package:wordle/wordle/presentation/wordle_keyboard.dart';
 import 'package:wordle/wordle/shared/providers.dart';
 
 class WordlePage extends ConsumerWidget {
@@ -24,9 +25,6 @@ class WordlePage extends ConsumerWidget {
                   height: 16,
                 ),
                 const Game(),
-                const SizedBox(
-                  height: 50,
-                )
               ],
             ),
           ),
@@ -57,7 +55,9 @@ class Game extends ConsumerWidget {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text("Guess not a valid word"),
+                    content: Text(
+                      "not a valid word",
+                    ),
                     behavior: SnackBarBehavior.floating,
                   ),
                 );
@@ -65,7 +65,17 @@ class Game extends ConsumerWidget {
             }
             return [
               Guesses(value.guesses),
-              const GuessInput(),
+              WordleKeyboard(
+                onKeyPress: (text) {
+                  ref.read(wordleProvider.notifier).inputLetter(text);
+                },
+                onBackSpacePress: () {
+                  ref.read(wordleProvider.notifier).removeLetter();
+                },
+                onReturnPress: () {
+                  ref.read(wordleProvider.notifier).submitGuess();
+                },
+              ),
             ];
           },
           gameOver: (value) {
@@ -130,12 +140,12 @@ class Game extends ConsumerWidget {
   }
 }
 
-class Guesses extends ConsumerWidget {
+class Guesses extends StatelessWidget {
   const Guesses(this.guesses, {Key? key}) : super(key: key);
   final List<Guess> guesses;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: guesses.map((e) {
@@ -197,9 +207,7 @@ class _GuessInputState extends ConsumerState<GuessInput> {
           ElevatedButton(
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                ref
-                    .read(wordleProvider.notifier)
-                    .addGuess(controller.text.toLowerCase());
+                ref.read(wordleProvider.notifier).submitGuess();
                 controller.clear();
               }
             },

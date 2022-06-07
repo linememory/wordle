@@ -19,8 +19,8 @@ mixin _$WordleState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(
-            String word, List<Guess> guesses, bool invalidGuess)
+    required TResult Function(String word, int currentGuess,
+            List<Guess> guesses, bool invalidGuess)
         game,
     required TResult Function(String word, List<Guess> guesses, bool hasGuessed)
         gameOver,
@@ -30,7 +30,9 @@ mixin _$WordleState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(String word, List<Guess> guesses, bool invalidGuess)? game,
+    TResult Function(String word, int currentGuess, List<Guess> guesses,
+            bool invalidGuess)?
+        game,
     TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
         gameOver,
     TResult Function(String? errorMessage)? failure,
@@ -39,7 +41,9 @@ mixin _$WordleState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(String word, List<Guess> guesses, bool invalidGuess)? game,
+    TResult Function(String word, int currentGuess, List<Guess> guesses,
+            bool invalidGuess)?
+        game,
     TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
         gameOver,
     TResult Function(String? errorMessage)? failure,
@@ -129,8 +133,8 @@ class _$_Initial implements _Initial {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(
-            String word, List<Guess> guesses, bool invalidGuess)
+    required TResult Function(String word, int currentGuess,
+            List<Guess> guesses, bool invalidGuess)
         game,
     required TResult Function(String word, List<Guess> guesses, bool hasGuessed)
         gameOver,
@@ -143,7 +147,9 @@ class _$_Initial implements _Initial {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(String word, List<Guess> guesses, bool invalidGuess)? game,
+    TResult Function(String word, int currentGuess, List<Guess> guesses,
+            bool invalidGuess)?
+        game,
     TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
         gameOver,
     TResult Function(String? errorMessage)? failure,
@@ -155,7 +161,9 @@ class _$_Initial implements _Initial {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(String word, List<Guess> guesses, bool invalidGuess)? game,
+    TResult Function(String word, int currentGuess, List<Guess> guesses,
+            bool invalidGuess)?
+        game,
     TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
         gameOver,
     TResult Function(String? errorMessage)? failure,
@@ -213,7 +221,8 @@ abstract class _Initial implements WordleState {
 abstract class _$$_GameCopyWith<$Res> {
   factory _$$_GameCopyWith(_$_Game value, $Res Function(_$_Game) then) =
       __$$_GameCopyWithImpl<$Res>;
-  $Res call({String word, List<Guess> guesses, bool invalidGuess});
+  $Res call(
+      {String word, int currentGuess, List<Guess> guesses, bool invalidGuess});
 }
 
 /// @nodoc
@@ -228,6 +237,7 @@ class __$$_GameCopyWithImpl<$Res> extends _$WordleStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? word = freezed,
+    Object? currentGuess = freezed,
     Object? guesses = freezed,
     Object? invalidGuess = freezed,
   }) {
@@ -236,6 +246,10 @@ class __$$_GameCopyWithImpl<$Res> extends _$WordleStateCopyWithImpl<$Res>
           ? _value.word
           : word // ignore: cast_nullable_to_non_nullable
               as String,
+      currentGuess: currentGuess == freezed
+          ? _value.currentGuess
+          : currentGuess // ignore: cast_nullable_to_non_nullable
+              as int,
       guesses: guesses == freezed
           ? _value._guesses
           : guesses // ignore: cast_nullable_to_non_nullable
@@ -252,11 +266,16 @@ class __$$_GameCopyWithImpl<$Res> extends _$WordleStateCopyWithImpl<$Res>
 
 class _$_Game implements _Game {
   const _$_Game(this.word,
-      {final List<Guess> guesses = const [], this.invalidGuess = false})
+      {this.currentGuess = 0,
+      final List<Guess> guesses = const [],
+      this.invalidGuess = false})
       : _guesses = guesses;
 
   @override
   final String word;
+  @override
+  @JsonKey()
+  final int currentGuess;
   final List<Guess> _guesses;
   @override
   @JsonKey()
@@ -271,7 +290,7 @@ class _$_Game implements _Game {
 
   @override
   String toString() {
-    return 'WordleState.game(word: $word, guesses: $guesses, invalidGuess: $invalidGuess)';
+    return 'WordleState.game(word: $word, currentGuess: $currentGuess, guesses: $guesses, invalidGuess: $invalidGuess)';
   }
 
   @override
@@ -280,6 +299,8 @@ class _$_Game implements _Game {
         (other.runtimeType == runtimeType &&
             other is _$_Game &&
             const DeepCollectionEquality().equals(other.word, word) &&
+            const DeepCollectionEquality()
+                .equals(other.currentGuess, currentGuess) &&
             const DeepCollectionEquality().equals(other._guesses, _guesses) &&
             const DeepCollectionEquality()
                 .equals(other.invalidGuess, invalidGuess));
@@ -289,6 +310,7 @@ class _$_Game implements _Game {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(word),
+      const DeepCollectionEquality().hash(currentGuess),
       const DeepCollectionEquality().hash(_guesses),
       const DeepCollectionEquality().hash(invalidGuess));
 
@@ -301,40 +323,44 @@ class _$_Game implements _Game {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(
-            String word, List<Guess> guesses, bool invalidGuess)
+    required TResult Function(String word, int currentGuess,
+            List<Guess> guesses, bool invalidGuess)
         game,
     required TResult Function(String word, List<Guess> guesses, bool hasGuessed)
         gameOver,
     required TResult Function(String? errorMessage) failure,
   }) {
-    return game(word, guesses, invalidGuess);
+    return game(word, currentGuess, guesses, invalidGuess);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(String word, List<Guess> guesses, bool invalidGuess)? game,
+    TResult Function(String word, int currentGuess, List<Guess> guesses,
+            bool invalidGuess)?
+        game,
     TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
         gameOver,
     TResult Function(String? errorMessage)? failure,
   }) {
-    return game?.call(word, guesses, invalidGuess);
+    return game?.call(word, currentGuess, guesses, invalidGuess);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(String word, List<Guess> guesses, bool invalidGuess)? game,
+    TResult Function(String word, int currentGuess, List<Guess> guesses,
+            bool invalidGuess)?
+        game,
     TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
         gameOver,
     TResult Function(String? errorMessage)? failure,
     required TResult orElse(),
   }) {
     if (game != null) {
-      return game(word, guesses, invalidGuess);
+      return game(word, currentGuess, guesses, invalidGuess);
     }
     return orElse();
   }
@@ -379,9 +405,12 @@ class _$_Game implements _Game {
 
 abstract class _Game implements WordleState {
   const factory _Game(final String word,
-      {final List<Guess> guesses, final bool invalidGuess}) = _$_Game;
+      {final int currentGuess,
+      final List<Guess> guesses,
+      final bool invalidGuess}) = _$_Game;
 
   String get word => throw _privateConstructorUsedError;
+  int get currentGuess => throw _privateConstructorUsedError;
   List<Guess> get guesses => throw _privateConstructorUsedError;
   bool get invalidGuess => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -481,8 +510,8 @@ class _$_GameOver implements _GameOver {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(
-            String word, List<Guess> guesses, bool invalidGuess)
+    required TResult Function(String word, int currentGuess,
+            List<Guess> guesses, bool invalidGuess)
         game,
     required TResult Function(String word, List<Guess> guesses, bool hasGuessed)
         gameOver,
@@ -495,7 +524,9 @@ class _$_GameOver implements _GameOver {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(String word, List<Guess> guesses, bool invalidGuess)? game,
+    TResult Function(String word, int currentGuess, List<Guess> guesses,
+            bool invalidGuess)?
+        game,
     TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
         gameOver,
     TResult Function(String? errorMessage)? failure,
@@ -507,7 +538,9 @@ class _$_GameOver implements _GameOver {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(String word, List<Guess> guesses, bool invalidGuess)? game,
+    TResult Function(String word, int currentGuess, List<Guess> guesses,
+            bool invalidGuess)?
+        game,
     TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
         gameOver,
     TResult Function(String? errorMessage)? failure,
@@ -634,8 +667,8 @@ class _$_Failure implements _Failure {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
-    required TResult Function(
-            String word, List<Guess> guesses, bool invalidGuess)
+    required TResult Function(String word, int currentGuess,
+            List<Guess> guesses, bool invalidGuess)
         game,
     required TResult Function(String word, List<Guess> guesses, bool hasGuessed)
         gameOver,
@@ -648,7 +681,9 @@ class _$_Failure implements _Failure {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(String word, List<Guess> guesses, bool invalidGuess)? game,
+    TResult Function(String word, int currentGuess, List<Guess> guesses,
+            bool invalidGuess)?
+        game,
     TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
         gameOver,
     TResult Function(String? errorMessage)? failure,
@@ -660,7 +695,9 @@ class _$_Failure implements _Failure {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
-    TResult Function(String word, List<Guess> guesses, bool invalidGuess)? game,
+    TResult Function(String word, int currentGuess, List<Guess> guesses,
+            bool invalidGuess)?
+        game,
     TResult Function(String word, List<Guess> guesses, bool hasGuessed)?
         gameOver,
     TResult Function(String? errorMessage)? failure,

@@ -17,27 +17,93 @@ class WorldeNotifier extends StateNotifier<WordleState> {
     final wordOrFailure = await wordsRepository.getRandomWord();
     wordOrFailure.fold(
       (l) => state = WordleState.failure(l.errorMessage),
-      (r) => state = WordleState.game(r),
+      (r) => state = WordleState.game(
+        r.toLowerCase(),
+        guesses: List.filled(
+          maxGuesses,
+          Guess(
+            '',
+            List.filled(5, Match.none),
+          ),
+        ),
+      ),
     );
   }
 
-  Future<void> addGuess(String guessWord) async {
+  void inputLetter(String input) {
     state.maybeMap(
-      game: (value) async {
-        if (await dictionaryRepository.isValid(guessWord)) {
+      game: (value) {
+        final List<Guess> newGuesses = List.from(value.guesses);
+        final guess = newGuesses[value.currentGuess];
+        if (guess.word.length < 5) {
+          newGuesses[value.currentGuess] =
+              guess.copyWith(word: guess.word + input);
           state = value.copyWith(
             invalidGuess: false,
-            guesses: List.from(value.guesses)
-              ..add(
-                _getGuessWithMatches(value.word, guessWord),
-              ),
+            guesses: newGuesses,
           );
-          chackIfGuessed();
+        }
+      },
+      orElse: () {},
+    );
+  }
+
+  void removeLetter() {
+    state.maybeMap(
+      game: (value) {
+        final List<Guess> newGuesses = List.from(value.guesses);
+        final Guess guess = newGuesses[value.currentGuess];
+        if (guess.word.isNotEmpty) {
+          newGuesses[value.currentGuess] = newGuesses[value.currentGuess]
+              .copyWith(word: guess.word.substring(0, guess.word.length - 1));
+        }
+        state = value.copyWith(
+          invalidGuess: false,
+          guesses: newGuesses,
+        );
+      },
+      orElse: () {},
+    );
+  }
+
+  Future<void> submitGuess() async {
+    state.maybeMap(
+      game: (value) async {
+        final String guessedWord = value.guesses[value.currentGuess].word;
+        if (await dictionaryRepository.isValid(guessedWord)) {
+          if (guessedWord == value.word) {
+            final Guess guess = value.guesses[value.currentGuess];
+            state = WordleState.gameOver(
+              value.word,
+              List.from(value.guesses)
+                ..[value.currentGuess] =
+                    _getGuessWithMatches(value.word, guess.word),
+              hasGuessed: true,
+            );
+          } else if (value.currentGuess >= maxGuesses - 1) {
+            final Guess guess = value.guesses[value.currentGuess];
+            state = WordleState.gameOver(
+              value.word,
+              List.from(value.guesses)
+                ..[value.currentGuess] =
+                    _getGuessWithMatches(value.word, guess.word),
+              hasGuessed: false,
+            );
+          } else {
+            final Guess guess = value.guesses[value.currentGuess];
+            state = value.copyWith(
+              currentGuess: value.currentGuess + 1,
+              invalidGuess: false,
+              guesses: List.from(value.guesses)
+                ..[value.currentGuess] =
+                    _getGuessWithMatches(value.word, guess.word),
+            );
+          }
         } else {
-          state = value.copyWith(
-            invalidGuess: true,
-            guesses: List.from(value.guesses),
-          );
+          final List<Guess> guesses = List.from(value.guesses);
+          guesses[value.currentGuess] =
+              guesses[value.currentGuess].copyWith(word: "");
+          state = value.copyWith(invalidGuess: true, guesses: guesses);
         }
       },
       orElse: () {},
@@ -47,27 +113,13 @@ class WorldeNotifier extends StateNotifier<WordleState> {
   Guess _getGuessWithMatches(String word, String guess) {
     final List<Match> result = List<Match>.filled(word.length, Match.none);
     for (var i = 0; i < word.length; i++) {
-      if (word[i] == guess[i]) {
+      if (word[i] == guess[i].toLowerCase()) {
         result[i] = Match.match;
-      } else if (word.contains(guess[i])) {
+      } else if (word.contains(guess[i].toLowerCase())) {
         result[i] = Match.wrongPosition;
       }
     }
     return Guess(guess, result);
-  }
-
-  void chackIfGuessed() {
-    state.maybeMap(
-      game: (value) {
-        if (value.word == value.guesses.last.word) {
-          state =
-              WordleState.gameOver(value.word, value.guesses, hasGuessed: true);
-        } else if (value.guesses.length >= maxGuesses) {
-          state = WordleState.gameOver(value.word, value.guesses);
-        }
-      },
-      orElse: () {},
-    );
   }
 }
 
@@ -76,6 +128,7 @@ class WordleState with _$WordleState {
   const factory WordleState.initial() = _Initial;
   const factory WordleState.game(
     String word, {
+    @Default(0) int currentGuess,
     @Default([]) List<Guess> guesses,
     @Default(false) bool invalidGuess,
   }) = _Game;

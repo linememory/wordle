@@ -12,7 +12,7 @@ class GuessWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> children = [];
-    for (var i = 0; i < guess.word.length; i++) {
+    for (var i = 0; i < guess.match.length; i++) {
       children.add(
         Container(
           alignment: Alignment.center,
@@ -20,7 +20,7 @@ class GuessWidget extends StatelessWidget {
           height: 50,
           color: Colors.grey.shade600,
           child: Text(
-            guess.word[i].toUpperCase(),
+            guess.word.length > i ? guess.word[i].toUpperCase() : "",
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -40,7 +40,8 @@ class GuessWidget extends StatelessWidget {
         ),
       );
     }
-    children.removeLast();
+
+    if (children.isNotEmpty) children.removeLast();
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
