@@ -16,6 +16,10 @@ class KeyboardNotifier extends StateNotifier<KeyboardState> {
     if (currentMatch == LetterMatch.match) return;
     state = state.copyWith(letters: newLetters..[key] = match);
   }
+
+  void clear() {
+    state = const KeyboardState();
+  }
 }
 
 @freezed
