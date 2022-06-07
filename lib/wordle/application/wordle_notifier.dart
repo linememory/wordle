@@ -1,16 +1,22 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wordle/wordle/application/keyboard_notifier.dart';
 import 'package:wordle/wordle/domain/guess.dart';
 import 'package:wordle/wordle/infrastructure/dictionary_repository.dart';
 import 'package:wordle/wordle/infrastructure/words_repository.dart';
 part 'wordle_notifier.freezed.dart';
 
 class WorldeNotifier extends StateNotifier<WordleState> {
-  WorldeNotifier(this.wordsRepository, this.dictionaryRepository)
-      : super(const WordleState.initial());
+  WorldeNotifier(
+    this.wordsRepository,
+    this.dictionaryRepository,
+    this.keyboardNotifier,
+  ) : super(const WordleState.initial());
 
   final WordsRepository wordsRepository;
   final DictionaryRepository dictionaryRepository;
+  final KeyboardNotifier keyboardNotifier;
+
   final int maxGuesses = 6;
 
   Future<void> startGame() async {
@@ -23,7 +29,7 @@ class WorldeNotifier extends StateNotifier<WordleState> {
           maxGuesses,
           Guess(
             '',
-            List.filled(5, Match.none),
+            List.filled(5, LetterMatch.none),
           ),
         ),
       ),
@@ -111,14 +117,17 @@ class WorldeNotifier extends StateNotifier<WordleState> {
   }
 
   Guess _getGuessWithMatches(String word, String guess) {
-    final List<Match> result = List<Match>.filled(word.length, Match.none);
+    final List<LetterMatch> result =
+        List<LetterMatch>.filled(word.length, LetterMatch.none);
     for (var i = 0; i < word.length; i++) {
       if (word[i] == guess[i].toLowerCase()) {
-        result[i] = Match.match;
+        result[i] = LetterMatch.match;
       } else if (word.contains(guess[i].toLowerCase())) {
-        result[i] = Match.wrongPosition;
+        result[i] = LetterMatch.wrongPosition;
       }
+      keyboardNotifier.addKey(guess[i], result[i]);
     }
+
     return Guess(guess, result);
   }
 }

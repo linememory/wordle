@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$Guess {
   String get word => throw _privateConstructorUsedError;
-  List<Match> get match => throw _privateConstructorUsedError;
+  List<LetterMatch> get match => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $GuessCopyWith<Guess> get copyWith => throw _privateConstructorUsedError;
@@ -27,7 +27,7 @@ mixin _$Guess {
 abstract class $GuessCopyWith<$Res> {
   factory $GuessCopyWith(Guess value, $Res Function(Guess) then) =
       _$GuessCopyWithImpl<$Res>;
-  $Res call({String word, List<Match> match});
+  $Res call({String word, List<LetterMatch> match});
 }
 
 /// @nodoc
@@ -51,7 +51,7 @@ class _$GuessCopyWithImpl<$Res> implements $GuessCopyWith<$Res> {
       match: match == freezed
           ? _value.match
           : match // ignore: cast_nullable_to_non_nullable
-              as List<Match>,
+              as List<LetterMatch>,
     ));
   }
 }
@@ -61,7 +61,7 @@ abstract class _$$_GuessCopyWith<$Res> implements $GuessCopyWith<$Res> {
   factory _$$_GuessCopyWith(_$_Guess value, $Res Function(_$_Guess) then) =
       __$$_GuessCopyWithImpl<$Res>;
   @override
-  $Res call({String word, List<Match> match});
+  $Res call({String word, List<LetterMatch> match});
 }
 
 /// @nodoc
@@ -86,7 +86,7 @@ class __$$_GuessCopyWithImpl<$Res> extends _$GuessCopyWithImpl<$Res>
       match == freezed
           ? _value._match
           : match // ignore: cast_nullable_to_non_nullable
-              as List<Match>,
+              as List<LetterMatch>,
     ));
   }
 }
@@ -94,13 +94,13 @@ class __$$_GuessCopyWithImpl<$Res> extends _$GuessCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_Guess implements _Guess {
-  _$_Guess(this.word, final List<Match> match) : _match = match;
+  _$_Guess(this.word, final List<LetterMatch> match) : _match = match;
 
   @override
   final String word;
-  final List<Match> _match;
+  final List<LetterMatch> _match;
   @override
-  List<Match> get match {
+  List<LetterMatch> get match {
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_match);
   }
@@ -132,12 +132,12 @@ class _$_Guess implements _Guess {
 }
 
 abstract class _Guess implements Guess {
-  factory _Guess(final String word, final List<Match> match) = _$_Guess;
+  factory _Guess(final String word, final List<LetterMatch> match) = _$_Guess;
 
   @override
   String get word => throw _privateConstructorUsedError;
   @override
-  List<Match> get match => throw _privateConstructorUsedError;
+  List<LetterMatch> get match => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$$_GuessCopyWith<_$_Guess> get copyWith =>

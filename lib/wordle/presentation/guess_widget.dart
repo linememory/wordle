@@ -25,9 +25,9 @@ class GuessWidget extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 26,
-              color: guess.match[i] == Match.match
+              color: guess.match[i] == LetterMatch.match
                   ? Colors.green
-                  : guess.match[i] == Match.wrongPosition
+                  : guess.match[i] == LetterMatch.wrongPosition
                       ? Colors.yellow
                       : Colors.grey,
             ),

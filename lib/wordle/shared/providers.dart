@@ -1,4 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wordle/wordle/application/keyboard_notifier.dart';
 import 'package:wordle/wordle/application/wordle_notifier.dart';
 import 'package:wordle/wordle/infrastructure/dictionary_datasource.dart';
 import 'package:wordle/wordle/infrastructure/dictionary_repository.dart';
@@ -21,17 +22,6 @@ final wordsRepositoryProvider = Provider<WordsRepository>((ref) {
   );
 });
 
-final wordleProvider = StateNotifierProvider<WorldeNotifier, WordleState>(
-  (ref) {
-    return WorldeNotifier(
-      ref.watch(wordsRepositoryProvider),
-      ref.watch(
-        dictionaryRepositoryProvider,
-      ),
-    );
-  },
-);
-
 final dictionaryAssetPathProvider = Provider<String>((ref) {
   return 'assets/dictionaries/en.txt';
 });
@@ -47,3 +37,20 @@ final dictionaryRepositoryProvider = Provider<DictionaryRepository>((ref) {
     ref.watch(dictionaryDatasourceProvider),
   );
 });
+
+final keyboardProvider =
+    StateNotifierProvider<KeyboardNotifier, KeyboardState>((ref) {
+  return KeyboardNotifier();
+});
+
+final wordleProvider = StateNotifierProvider<WorldeNotifier, WordleState>(
+  (ref) {
+    return WorldeNotifier(
+      ref.watch(wordsRepositoryProvider),
+      ref.watch(
+        dictionaryRepositoryProvider,
+      ),
+      ref.read(keyboardProvider.notifier),
+    );
+  },
+);
