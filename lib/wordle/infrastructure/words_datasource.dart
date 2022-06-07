@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/services.dart';
 
@@ -17,7 +18,7 @@ class FileWordsDatasource implements WordsDatasource {
     final words = cachedWords ??
         await rootBundle.loadStructuredData(
           assetPath,
-          (value) async => value.split(','),
+          (value) async => const LineSplitter().convert(value),
         );
     words!.removeWhere((word) => word.length != 5);
     cachedWords = words;

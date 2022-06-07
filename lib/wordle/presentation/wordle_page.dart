@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wordle/settings/presentation/settings_dialog.dart';
 import 'package:wordle/wordle/domain/guess.dart';
 import 'package:wordle/wordle/presentation/guess_widget.dart';
 import 'package:wordle/wordle/presentation/wordle_keyboard.dart';
@@ -11,6 +12,21 @@ class WordlePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return const SettingsDialog();
+                },
+              );
+            },
+            icon: const Icon(Icons.settings),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Center(
           child: Padding(
