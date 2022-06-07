@@ -21,6 +21,7 @@ class WorldeNotifier extends StateNotifier<WordleState> {
 
   Future<void> startGame() async {
     final wordOrFailure = await wordsRepository.getRandomWord();
+    keyboardNotifier.clear();
     wordOrFailure.fold(
       (l) => state = WordleState.failure(l.errorMessage),
       (r) => state = WordleState.game(
