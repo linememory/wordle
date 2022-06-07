@@ -10,17 +10,25 @@ final wordsAssetPathProvider = Provider<String>((ref) {
 });
 
 final wordsDatasourceProvider = Provider<WordsDatasource>((ref) {
-  return FileWordsDatasource(ref.watch(wordsAssetPathProvider));
+  return FileWordsDatasource(
+    ref.watch(wordsAssetPathProvider),
+  );
 });
 
 final wordsRepositoryProvider = Provider<WordsRepository>((ref) {
-  return WordsRepository(ref.watch(wordsDatasourceProvider));
+  return WordsRepository(
+    ref.watch(wordsDatasourceProvider),
+  );
 });
 
 final wordleProvider = StateNotifierProvider<WorldeNotifier, WordleState>(
   (ref) {
-    return WorldeNotifier(ref.watch(wordsRepositoryProvider),
-        ref.watch(dictionaryRepositoryProvider));
+    return WorldeNotifier(
+      ref.watch(wordsRepositoryProvider),
+      ref.watch(
+        dictionaryRepositoryProvider,
+      ),
+    );
   },
 );
 
@@ -29,9 +37,13 @@ final dictionaryAssetPathProvider = Provider<String>((ref) {
 });
 
 final dictionaryDatasourceProvider = Provider<DictionaryDatasource>((ref) {
-  return FileDictionaryDatasource(ref.watch(dictionaryAssetPathProvider));
+  return FileDictionaryDatasource(
+    ref.watch(dictionaryAssetPathProvider),
+  );
 });
 
 final dictionaryRepositoryProvider = Provider<DictionaryRepository>((ref) {
-  return DictionaryRepository(ref.watch(dictionaryDatasourceProvider));
+  return DictionaryRepository(
+    ref.watch(dictionaryDatasourceProvider),
+  );
 });
