@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesDatasource {
-  Future<void> save(Map<String, dynamic> data, String key) async {
+  Future<void> save(String key, Map<String, dynamic> data) async {
     final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
     sharedPrefs.setString(key, json.encode(data));
   }

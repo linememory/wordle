@@ -1,23 +1,23 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:wordle/settings/infrastructure/settings_datasource.dart';
+import 'package:wordle/settings/infrastructure/settings_repository.dart';
 
 part 'settings_notifier.freezed.dart';
 part 'settings_notifier.g.dart';
 
 class SettingsNotifier extends StateNotifier<SettingsState> {
-  SettingsNotifier(this._settingsDatasource) : super(const SettingsState());
+  SettingsNotifier(this._settingsRepository) : super(const SettingsState());
 
-  final SettingsDatasource _settingsDatasource;
+  final SettingsRepository _settingsRepository;
 
   Future<void> loadSettings() async {
-    state = await _settingsDatasource.load();
+    state = await _settingsRepository.load();
   }
 
   void setLanguage(String language) {
     if (SettingsState.supportedLanguages.contains(language)) {
       state = state.copyWith(language: language);
-      _settingsDatasource.save(state);
+      _settingsRepository.save(state);
     }
   }
 }
