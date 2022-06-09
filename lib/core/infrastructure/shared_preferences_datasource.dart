@@ -17,4 +17,9 @@ class SharedPreferencesDatasource {
       return {};
     }
   }
+
+  Future<void> remove(String key) async {
+    final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    sharedPrefs.remove(key);
+  }
 }
