@@ -1,5 +1,7 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wordle/core/presentation/routes/app_router.gr.dart';
 import 'package:wordle/settings/presentation/settings_dialog.dart';
 import 'package:wordle/wordle/domain/guess.dart';
 import 'package:wordle/wordle/presentation/guess_widget.dart';
@@ -24,6 +26,12 @@ class WordlePage extends ConsumerWidget {
               );
             },
             icon: const Icon(Icons.settings),
+          ),
+          IconButton(
+            onPressed: () {
+              AutoRouter.of(context).push(const StatisticsRoute());
+            },
+            icon: const Icon(Icons.bar_chart_outlined),
           ),
         ],
       ),
