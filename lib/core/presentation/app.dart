@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:wordle/core/presentation/routes/app_router.gr.dart';
 import 'package:wordle/settings/shared/providers.dart';
+import 'package:wordle/statistics/shared/providers.dart';
 
 class App extends ConsumerWidget {
   const App({Key? key}) : super(key: key);
@@ -11,6 +12,7 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final _appRouter = AppRouter();
     ref.read(settingsProvider.notifier).loadSettings();
+    ref.read(statisticsProvider.notifier).loadStatistics();
     _appRouter.pushAndPopUntil(
       const WordleRoute(),
       predicate: (route) => false,
