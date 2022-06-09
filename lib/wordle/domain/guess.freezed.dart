@@ -18,6 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$Guess {
   String get word => throw _privateConstructorUsedError;
   List<LetterMatch> get match => throw _privateConstructorUsedError;
+  bool get isInvalid => throw _privateConstructorUsedError;
+  bool get isSubmitted => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $GuessCopyWith<Guess> get copyWith => throw _privateConstructorUsedError;
@@ -27,7 +29,8 @@ mixin _$Guess {
 abstract class $GuessCopyWith<$Res> {
   factory $GuessCopyWith(Guess value, $Res Function(Guess) then) =
       _$GuessCopyWithImpl<$Res>;
-  $Res call({String word, List<LetterMatch> match});
+  $Res call(
+      {String word, List<LetterMatch> match, bool isInvalid, bool isSubmitted});
 }
 
 /// @nodoc
@@ -42,6 +45,8 @@ class _$GuessCopyWithImpl<$Res> implements $GuessCopyWith<$Res> {
   $Res call({
     Object? word = freezed,
     Object? match = freezed,
+    Object? isInvalid = freezed,
+    Object? isSubmitted = freezed,
   }) {
     return _then(_value.copyWith(
       word: word == freezed
@@ -52,6 +57,14 @@ class _$GuessCopyWithImpl<$Res> implements $GuessCopyWith<$Res> {
           ? _value.match
           : match // ignore: cast_nullable_to_non_nullable
               as List<LetterMatch>,
+      isInvalid: isInvalid == freezed
+          ? _value.isInvalid
+          : isInvalid // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isSubmitted: isSubmitted == freezed
+          ? _value.isSubmitted
+          : isSubmitted // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -61,7 +74,8 @@ abstract class _$$_GuessCopyWith<$Res> implements $GuessCopyWith<$Res> {
   factory _$$_GuessCopyWith(_$_Guess value, $Res Function(_$_Guess) then) =
       __$$_GuessCopyWithImpl<$Res>;
   @override
-  $Res call({String word, List<LetterMatch> match});
+  $Res call(
+      {String word, List<LetterMatch> match, bool isInvalid, bool isSubmitted});
 }
 
 /// @nodoc
@@ -77,6 +91,8 @@ class __$$_GuessCopyWithImpl<$Res> extends _$GuessCopyWithImpl<$Res>
   $Res call({
     Object? word = freezed,
     Object? match = freezed,
+    Object? isInvalid = freezed,
+    Object? isSubmitted = freezed,
   }) {
     return _then(_$_Guess(
       word == freezed
@@ -87,6 +103,14 @@ class __$$_GuessCopyWithImpl<$Res> extends _$GuessCopyWithImpl<$Res>
           ? _value._match
           : match // ignore: cast_nullable_to_non_nullable
               as List<LetterMatch>,
+      isInvalid: isInvalid == freezed
+          ? _value.isInvalid
+          : isInvalid // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isSubmitted: isSubmitted == freezed
+          ? _value.isSubmitted
+          : isSubmitted // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -94,7 +118,9 @@ class __$$_GuessCopyWithImpl<$Res> extends _$GuessCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_Guess implements _Guess {
-  _$_Guess(this.word, final List<LetterMatch> match) : _match = match;
+  _$_Guess(this.word, final List<LetterMatch> match,
+      {this.isInvalid = false, this.isSubmitted = false})
+      : _match = match;
 
   @override
   final String word;
@@ -106,8 +132,15 @@ class _$_Guess implements _Guess {
   }
 
   @override
+  @JsonKey()
+  final bool isInvalid;
+  @override
+  @JsonKey()
+  final bool isSubmitted;
+
+  @override
   String toString() {
-    return 'Guess(word: $word, match: $match)';
+    return 'Guess(word: $word, match: $match, isInvalid: $isInvalid, isSubmitted: $isSubmitted)';
   }
 
   @override
@@ -116,14 +149,19 @@ class _$_Guess implements _Guess {
         (other.runtimeType == runtimeType &&
             other is _$_Guess &&
             const DeepCollectionEquality().equals(other.word, word) &&
-            const DeepCollectionEquality().equals(other._match, _match));
+            const DeepCollectionEquality().equals(other._match, _match) &&
+            const DeepCollectionEquality().equals(other.isInvalid, isInvalid) &&
+            const DeepCollectionEquality()
+                .equals(other.isSubmitted, isSubmitted));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(word),
-      const DeepCollectionEquality().hash(_match));
+      const DeepCollectionEquality().hash(_match),
+      const DeepCollectionEquality().hash(isInvalid),
+      const DeepCollectionEquality().hash(isSubmitted));
 
   @JsonKey(ignore: true)
   @override
@@ -132,12 +170,17 @@ class _$_Guess implements _Guess {
 }
 
 abstract class _Guess implements Guess {
-  factory _Guess(final String word, final List<LetterMatch> match) = _$_Guess;
+  factory _Guess(final String word, final List<LetterMatch> match,
+      {final bool isInvalid, final bool isSubmitted}) = _$_Guess;
 
   @override
   String get word => throw _privateConstructorUsedError;
   @override
   List<LetterMatch> get match => throw _privateConstructorUsedError;
+  @override
+  bool get isInvalid => throw _privateConstructorUsedError;
+  @override
+  bool get isSubmitted => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$$_GuessCopyWith<_$_Guess> get copyWith =>

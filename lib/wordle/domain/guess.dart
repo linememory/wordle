@@ -4,7 +4,12 @@ part 'guess.freezed.dart';
 
 @freezed
 class Guess with _$Guess {
-  factory Guess(String word, List<LetterMatch> match) = _Guess;
+  factory Guess(
+    String word,
+    List<LetterMatch> match, {
+    @Default(false) bool isInvalid,
+    @Default(false) bool isSubmitted,
+  }) = _Guess;
 }
 
 enum LetterMatch {

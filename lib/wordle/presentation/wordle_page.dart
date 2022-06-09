@@ -75,18 +75,6 @@ class Game extends ConsumerWidget {
             return [const CircularProgressIndicator()];
           },
           game: (value) {
-            if (value.invalidGuess) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      "not a valid word",
-                    ),
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
-              });
-            }
             return [
               Guesses(value.guesses),
               WordleKeyboard(
@@ -95,9 +83,6 @@ class Game extends ConsumerWidget {
                 },
                 onBackSpacePress: () {
                   ref.read(wordleProvider.notifier).removeLetter();
-                },
-                onReturnPress: () {
-                  ref.read(wordleProvider.notifier).submitGuess();
                 },
               ),
             ];
@@ -170,18 +155,25 @@ class Guesses extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: guesses.map((e) {
-        return Column(
-          children: [
-            GuessWidget(guess: e),
-            const SizedBox(
-              height: 4,
-            )
-          ],
-        );
-      }).toList(),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: guesses.map((e) {
+          return Column(
+            children: [
+              GuessWidget(
+                guess: e,
+                isInvalid: e.isInvalid,
+                isSubmitted: e.isSubmitted,
+              ),
+              const SizedBox(
+                height: 4,
+              )
+            ],
+          );
+        }).toList(),
+      ),
     );
   }
 }

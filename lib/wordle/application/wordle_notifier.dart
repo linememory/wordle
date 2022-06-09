@@ -52,6 +52,9 @@ class WorldeNotifier extends StateNotifier<WordleState> {
             invalidGuess: false,
             guesses: newGuesses,
           );
+          if (guess.word.length == 4) {
+            submitGuess();
+          }
         }
       },
       orElse: () {},
@@ -81,6 +84,7 @@ class WorldeNotifier extends StateNotifier<WordleState> {
       game: (value) async {
         final String guessedWord = value.guesses[value.currentGuess].word;
         if (await _dictionaryRepository.isValid(guessedWord)) {
+          // Guessed
           if (guessedWord == value.word) {
             final Guess guess = value.guesses[value.currentGuess];
             state = WordleState.gameOver(
@@ -91,7 +95,9 @@ class WorldeNotifier extends StateNotifier<WordleState> {
               hasGuessed: true,
             );
             _statisticsNotifier.addGame(value.currentGuess);
-          } else if (value.currentGuess >= maxGuesses - 1) {
+          }
+          // Game over
+          else if (value.currentGuess >= maxGuesses - 1) {
             final Guess guess = value.guesses[value.currentGuess];
             state = WordleState.gameOver(
               value.word,
@@ -100,8 +106,10 @@ class WorldeNotifier extends StateNotifier<WordleState> {
                     _getGuessWithMatches(value.word, guess.word),
               hasGuessed: false,
             );
-            _statisticsNotifier.addGame(value.currentGuess+1);
-          } else {
+            _statisticsNotifier.addGame(value.currentGuess + 1);
+          }
+          // add guess
+          else {
             final Guess guess = value.guesses[value.currentGuess];
             state = value.copyWith(
               currentGuess: value.currentGuess + 1,
@@ -114,7 +122,7 @@ class WorldeNotifier extends StateNotifier<WordleState> {
         } else {
           final List<Guess> guesses = List.from(value.guesses);
           guesses[value.currentGuess] =
-              guesses[value.currentGuess].copyWith(word: "");
+              guesses[value.currentGuess].copyWith(isInvalid: true);
           state = value.copyWith(invalidGuess: true, guesses: guesses);
         }
       },
@@ -134,7 +142,7 @@ class WorldeNotifier extends StateNotifier<WordleState> {
       _keyboardNotifier.addKey(guess[i], result[i]);
     }
 
-    return Guess(guess, result);
+    return Guess(guess, result, isSubmitted: true);
   }
 }
 

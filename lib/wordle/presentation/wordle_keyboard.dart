@@ -8,18 +8,16 @@ class WordleKeyboard extends ConsumerWidget {
     Key? key,
     required this.onKeyPress,
     required this.onBackSpacePress,
-    required this.onReturnPress,
   }) : super(key: key);
 
   static const List<List<String>> keys = [
     ['q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p'],
     ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-    ['\r', 'y', 'x', 'c', 'v', 'b', 'n', 'm', '\b']
+    ['y', 'x', 'c', 'v', 'b', 'n', 'm', '\b']
   ];
 
   final void Function(String text) onKeyPress;
   final VoidCallback onBackSpacePress;
-  final VoidCallback onReturnPress;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,14 +35,6 @@ class WordleKeyboard extends ConsumerWidget {
                   onTab: onBackSpacePress,
                 );
               }
-              if (e == '\r') {
-                return KeyboardKey(
-                  flex: 3,
-                  value: const Icon(Icons.keyboard_return_outlined),
-                  onTab: onReturnPress,
-                );
-              }
-
               final LetterMatch? match = keyboardState.letters[e];
               final Color color = match == null
                   ? Theme.of(context).backgroundColor
