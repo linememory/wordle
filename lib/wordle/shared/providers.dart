@@ -1,5 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wordle/settings/shared/providers.dart';
+import 'package:wordle/statistics/shared/providers.dart';
 import 'package:wordle/wordle/application/keyboard_notifier.dart';
 import 'package:wordle/wordle/application/wordle_notifier.dart';
 import 'package:wordle/wordle/infrastructure/dictionary_datasource.dart';
@@ -66,6 +67,7 @@ final wordleProvider = StateNotifierProvider<WorldeNotifier, WordleState>(
         dictionaryRepositoryProvider,
       ),
       ref.read(keyboardProvider.notifier),
+      ref.read(statisticsProvider.notifier),
     );
   },
 );

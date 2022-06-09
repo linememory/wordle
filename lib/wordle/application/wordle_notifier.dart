@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wordle/statistics/domain/statistics_notifier.dart';
 import 'package:wordle/wordle/application/keyboard_notifier.dart';
 import 'package:wordle/wordle/domain/guess.dart';
 import 'package:wordle/wordle/infrastructure/dictionary_repository.dart';
@@ -8,20 +9,22 @@ part 'wordle_notifier.freezed.dart';
 
 class WorldeNotifier extends StateNotifier<WordleState> {
   WorldeNotifier(
-    this.wordsRepository,
-    this.dictionaryRepository,
-    this.keyboardNotifier,
+    this._wordsRepository,
+    this._dictionaryRepository,
+    this._keyboardNotifier,
+    this._statisticsNotifier,
   ) : super(const WordleState.initial());
 
-  final WordsRepository wordsRepository;
-  final DictionaryRepository dictionaryRepository;
-  final KeyboardNotifier keyboardNotifier;
+  final WordsRepository _wordsRepository;
+  final DictionaryRepository _dictionaryRepository;
+  final KeyboardNotifier _keyboardNotifier;
+  final StatisticsNotifier _statisticsNotifier;
 
   final int maxGuesses = 6;
 
   Future<void> startGame() async {
-    final wordOrFailure = await wordsRepository.getRandomWord();
-    keyboardNotifier.clear();
+    final wordOrFailure = await _wordsRepository.getRandomWord();
+    _keyboardNotifier.clear();
     wordOrFailure.fold(
       (l) => state = WordleState.failure(l.errorMessage),
       (r) => state = WordleState.game(
@@ -77,7 +80,7 @@ class WorldeNotifier extends StateNotifier<WordleState> {
     state.maybeMap(
       game: (value) async {
         final String guessedWord = value.guesses[value.currentGuess].word;
-        if (await dictionaryRepository.isValid(guessedWord)) {
+        if (await _dictionaryRepository.isValid(guessedWord)) {
           if (guessedWord == value.word) {
             final Guess guess = value.guesses[value.currentGuess];
             state = WordleState.gameOver(
@@ -87,6 +90,7 @@ class WorldeNotifier extends StateNotifier<WordleState> {
                     _getGuessWithMatches(value.word, guess.word),
               hasGuessed: true,
             );
+            _statisticsNotifier.addGame(value.currentGuess);
           } else if (value.currentGuess >= maxGuesses - 1) {
             final Guess guess = value.guesses[value.currentGuess];
             state = WordleState.gameOver(
@@ -96,6 +100,7 @@ class WorldeNotifier extends StateNotifier<WordleState> {
                     _getGuessWithMatches(value.word, guess.word),
               hasGuessed: false,
             );
+            _statisticsNotifier.addGame(value.currentGuess+1);
           } else {
             final Guess guess = value.guesses[value.currentGuess];
             state = value.copyWith(
@@ -126,7 +131,7 @@ class WorldeNotifier extends StateNotifier<WordleState> {
       } else if (word.contains(guess[i].toLowerCase())) {
         result[i] = LetterMatch.wrongPosition;
       }
-      keyboardNotifier.addKey(guess[i], result[i]);
+      _keyboardNotifier.addKey(guess[i], result[i]);
     }
 
     return Guess(guess, result);
