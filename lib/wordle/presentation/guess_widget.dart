@@ -19,13 +19,11 @@ class GuessWidget extends StatelessWidget {
     final List<Widget> children = [];
     for (var i = 0; i < guess.match.length; i++) {
       children.add(
-        Expanded(
+        Flexible(
           child: AspectRatio(
             aspectRatio: 1,
             child: Container(
               alignment: Alignment.center,
-              //width: 50,
-              height: 100,
               color: isSubmitted ? Colors.grey.shade600 : Colors.grey.shade800,
               child: Text(
                 guess.word.length > i ? guess.word[i].toUpperCase() : "",

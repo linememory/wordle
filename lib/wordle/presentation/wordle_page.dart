@@ -15,6 +15,10 @@ class WordlePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
+        title: Text(
+          "Wordle",
+          style: Theme.of(context).textTheme.headline3,
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -42,11 +46,8 @@ class WordlePage extends ConsumerWidget {
             child: Column(
               children: [
                 Text(
-                  "Wordle",
-                  style: Theme.of(context).textTheme.headline2,
-                ),
-                const SizedBox(
-                  height: 16,
+                  "Guess the word",
+                  style: Theme.of(context).textTheme.headline4,
                 ),
                 const Game(),
               ],
@@ -76,50 +77,57 @@ class Game extends ConsumerWidget {
           },
           game: (value) {
             return [
-              Guesses(value.guesses),
-              WordleKeyboard(
-                onKeyPress: (text) {
-                  ref.read(wordleProvider.notifier).inputLetter(text);
-                },
-                onBackSpacePress: () {
-                  ref.read(wordleProvider.notifier).removeLetter();
-                },
+              Expanded(
+                flex: 2,
+                child: Guesses(value.guesses),
+              ),
+              Expanded(
+                child: WordleKeyboard(
+                  onKeyPress: (text) {
+                    ref.read(wordleProvider.notifier).inputLetter(text);
+                  },
+                  onBackSpacePress: () {
+                    ref.read(wordleProvider.notifier).removeLetter();
+                  },
+                ),
               ),
             ];
           },
           gameOver: (value) {
             return [
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "GameOver",
-                      style: Theme.of(context).textTheme.headline4,
+              Expanded(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "GameOver",
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      value.hasGuessed
-                          ? "You Guessed it!"
-                          : "Too bad...\n you didn't guess the word.",
-                      style: Theme.of(context).textTheme.headline5,
-                      textAlign: TextAlign.center,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        value.hasGuessed
+                            ? "You Guessed it!"
+                            : "Too bad... you didn't guess the word.",
+                        style: Theme.of(context).textTheme.headline5,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      value.word.toUpperCase(),
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline4!
-                          .copyWith(color: Colors.green),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        value.word.toUpperCase(),
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline4!
+                            .copyWith(color: Colors.green),
+                      ),
                     ),
-                  ),
-                  Guesses(value.guesses),
-                ],
+                    Expanded(child: Guesses(value.guesses)),
+                  ],
+                ),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -158,78 +166,18 @@ class Guesses extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         children: guesses.map((e) {
-          return Column(
-            children: [
-              GuessWidget(
+          return Flexible(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 4.0),
+              child: GuessWidget(
                 guess: e,
                 isInvalid: e.isInvalid,
                 isSubmitted: e.isSubmitted,
               ),
-              const SizedBox(
-                height: 4,
-              )
-            ],
+            ),
           );
         }).toList(),
-      ),
-    );
-  }
-}
-
-class GuessInput extends ConsumerStatefulWidget {
-  const GuessInput({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _GuessInputState();
-}
-
-class _GuessInputState extends ConsumerState<GuessInput> {
-  TextEditingController controller = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          TextFormField(
-            autofocus: true,
-            validator: (value) {
-              if (value == null) {
-              } else if (value.length != 5) {
-                return 'Only 5 letters allowed';
-              } else if (!RegExp(r'^[A-Za-z]+$').hasMatch(value)) {
-                return 'Only letters allowed';
-              }
-              return null;
-            },
-            controller: controller,
-            onChanged: (value) {
-              if (value.length >= 5) {
-                controller.text = controller.text.substring(0, 5);
-                controller.selection =
-                    const TextSelection(baseOffset: 5, extentOffset: 5);
-              }
-            },
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                ref.read(wordleProvider.notifier).submitGuess();
-                controller.clear();
-              }
-            },
-            child: const Text("Guess"),
-          ),
-        ],
       ),
     );
   }

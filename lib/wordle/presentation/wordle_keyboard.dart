@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wordle/wordle/domain/guess.dart';
 import 'package:wordle/wordle/shared/providers.dart';
@@ -10,11 +11,23 @@ class WordleKeyboard extends ConsumerWidget {
     required this.onBackSpacePress,
   }) : super(key: key);
 
-  static const List<List<String>> keys = [
-    ['q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p'],
-    ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-    ['y', 'x', 'c', 'v', 'b', 'n', 'm', '\b']
-  ];
+  static const Map<String, List<List<String>>> keys = {
+    'en': [
+      ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+      ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+      ['z', 'x', 'c', 'v', 'b', 'n', 'm', '\b']
+    ],
+    'de': [
+      ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+      ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+      ['z', 'x', 'c', 'v', 'b', 'n', 'm', '\b']
+    ],
+    'ru': [
+      ['ё', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ'],
+      ['ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э'],
+      ['я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '\b']
+    ]
+  };
 
   final void Function(String text) onKeyPress;
   final VoidCallback onBackSpacePress;
@@ -22,39 +35,44 @@ class WordleKeyboard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final keyboardState = ref.watch(keyboardProvider);
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: Column(
-        children: keys.map((e) {
-          return Row(
-            children: e.map((e) {
-              if (e == '\b') {
-                return KeyboardKey(
-                  flex: 2,
-                  value: const Icon(Icons.backspace_outlined),
-                  onTab: onBackSpacePress,
-                );
-              }
-              final LetterMatch? match = keyboardState.letters[e];
-              final Color color = match == null
-                  ? Theme.of(context).backgroundColor
-                  : match == LetterMatch.wrongPosition
-                      ? Colors.yellow
-                      : match == LetterMatch.match
-                          ? Colors.green
-                          : Colors.grey;
+    return AspectRatio(
+      aspectRatio: 2,
+      child: Container(
+        padding: const EdgeInsets.all(4.0),
+        child: Column(
+          children: keys['en']!.map((e) {
+            return Flexible(
+              child: Row(
+                children: e.map((e) {
+                  if (e == '\b') {
+                    return KeyboardKey(
+                      flex: 2,
+                      value: const Icon(Icons.backspace_outlined),
+                      onTab: onBackSpacePress,
+                    );
+                  }
+                  final LetterMatch? match = keyboardState.letters[e];
+                  final Color color = match == null
+                      ? Theme.of(context).backgroundColor
+                      : match == LetterMatch.wrongPosition
+                          ? Colors.yellow
+                          : match == LetterMatch.match
+                              ? Colors.green
+                              : Colors.grey;
 
-              return KeyboardKey(
-                flex: 2,
-                value: Text(e),
-                color: color,
-                onTab: () {
-                  onKeyPress(e);
-                },
-              );
-            }).toList(),
-          );
-        }).toList(),
+                  return KeyboardKey(
+                    flex: 2,
+                    value: Text(e),
+                    color: color,
+                    onTab: () {
+                      onKeyPress(e);
+                    },
+                  );
+                }).toList(),
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
@@ -79,10 +97,13 @@ class KeyboardKey extends StatelessWidget {
     return Flexible(
       flex: flex,
       child: InkWell(
-        onTap: onTab,
+        onTap: () {
+          HapticFeedback.vibrate();
+          onTab();
+        },
         child: Container(
           // width: 20,
-          height: 60,
+          //height: 60,
           margin: const EdgeInsets.all(2),
           decoration: BoxDecoration(
             color: color ?? Theme.of(context).colorScheme.background,
