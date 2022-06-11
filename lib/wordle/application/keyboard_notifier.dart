@@ -12,7 +12,6 @@ class KeyboardNotifier extends StateNotifier<KeyboardState> {
     final newLetters = Map<String, LetterMatch>.from(state.letters);
     final currentMatch = newLetters[key];
 
-    // if (match == LetterMatch.none && currentMatch != null) return;
     if (currentMatch == LetterMatch.match) return;
     state = state.copyWith(letters: newLetters..[key] = match);
   }
