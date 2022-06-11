@@ -1,6 +1,9 @@
+import 'package:flip_card/flip_card.dart';
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wordle/settings/shared/providers.dart';
 import 'package:wordle/statistics/shared/providers.dart';
+import 'package:wordle/wordle/application/flip_card_keys_notifier.dart';
 import 'package:wordle/wordle/application/keyboard_notifier.dart';
 import 'package:wordle/wordle/application/wordle_notifier.dart';
 import 'package:wordle/wordle/infrastructure/dictionary_datasource.dart';
@@ -63,6 +66,11 @@ final keyboardProvider =
   return KeyboardNotifier();
 });
 
+final flipCardKeysProvider = StateNotifierProvider<FlipCardKeysNotifier,
+    List<List<GlobalKey<FlipCardState>>>>((ref) {
+  return FlipCardKeysNotifier();
+});
+
 final wordleProvider = StateNotifierProvider<WorldeNotifier, WordleState>(
   (ref) {
     return WorldeNotifier(
@@ -72,6 +80,7 @@ final wordleProvider = StateNotifierProvider<WorldeNotifier, WordleState>(
       ),
       ref.read(keyboardProvider.notifier),
       ref.read(statisticsProvider.notifier),
+      ref.read(flipCardKeysProvider.notifier),
     );
   },
 );

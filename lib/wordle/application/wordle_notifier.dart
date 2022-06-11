@@ -1,10 +1,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wordle/statistics/domain/statistics_notifier.dart';
+import 'package:wordle/wordle/application/flip_card_keys_notifier.dart';
 import 'package:wordle/wordle/application/keyboard_notifier.dart';
 import 'package:wordle/wordle/domain/guess.dart';
 import 'package:wordle/wordle/infrastructure/dictionary_repository.dart';
 import 'package:wordle/wordle/infrastructure/words_repository.dart';
+
 part 'wordle_notifier.freezed.dart';
 
 class WorldeNotifier extends StateNotifier<WordleState> {
@@ -13,18 +15,21 @@ class WorldeNotifier extends StateNotifier<WordleState> {
     this._dictionaryRepository,
     this._keyboardNotifier,
     this._statisticsNotifier,
+    this._flipCardKeys,
   ) : super(const WordleState.initial());
 
   final WordsRepository _wordsRepository;
   final DictionaryRepository _dictionaryRepository;
   final KeyboardNotifier _keyboardNotifier;
   final StatisticsNotifier _statisticsNotifier;
+  final FlipCardKeysNotifier _flipCardKeys;
 
   final int maxGuesses = 6;
 
   Future<void> startGame() async {
     final wordOrFailure = await _wordsRepository.getRandomWord();
     _keyboardNotifier.clear();
+    _flipCardKeys.clear();
     wordOrFailure.fold(
       (l) => state = WordleState.failure(l.errorMessage),
       (r) => state = WordleState.game(
@@ -84,6 +89,7 @@ class WorldeNotifier extends StateNotifier<WordleState> {
       game: (value) async {
         final String guessedWord = value.guesses[value.currentGuess].word;
         if (await _dictionaryRepository.isValid(guessedWord)) {
+          await _flipCardKeys.flipGuess(value.currentGuess);
           // Guessed
           if (guessedWord == value.word) {
             final Guess guess = value.guesses[value.currentGuess];
