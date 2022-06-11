@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wordle/generated/l10n.dart';
 import 'package:wordle/statistics/presentation/bars.dart';
 import 'package:wordle/statistics/shared/providers.dart';
 
@@ -23,7 +24,7 @@ class StatisticsPage extends ConsumerWidget {
       vertical: VisualDensity.minimumDensity,
     );
     return Scaffold(
-      appBar: AppBar(title: const Text('Statistics')),
+      appBar: AppBar(title: Text(S.of(context).statistics)),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(32.0),
@@ -35,26 +36,26 @@ class StatisticsPage extends ConsumerWidget {
                   children: [
                     ListTile(
                       visualDensity: density,
-                      leading: const Text("Games played: "),
+                      leading: Text("${S.of(context).gamesPlayed}: "),
                       title: Text(statistics.games.toString()),
                     ),
                     ListTile(
                       visualDensity: density,
-                      leading: const Text("Games won: "),
+                      leading: Text("${S.of(context).gamesWon}: "),
                       title: Text(
                         '${((statistics.games - statistics.results[statistics.results.length - 1]) * 100 / (statistics.games + 0.00001)).ceil()}%',
                       ),
                     ),
                     ListTile(
                       visualDensity: density,
-                      leading: const Text("Current streak: "),
+                      leading: Text("${S.of(context).currentStreak}: "),
                       title: Text(
                         statistics.streak.toString(),
                       ),
                     ),
                     ListTile(
                       visualDensity: density,
-                      leading: const Text("Longes streak: "),
+                      leading: Text("${S.of(context).longestStreak}: "),
                       title: Text(
                         statistics.longestStreak.toString(),
                       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wordle/generated/l10n.dart';
 import 'package:wordle/settings/shared/providers.dart';
 import 'package:wordle/statistics/shared/providers.dart';
 
@@ -10,11 +11,12 @@ class SettingsDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsProvider);
     return SimpleDialog(
-      title: const Text("Settings"),
+      title: Text(S.of(context).settings),
+      contentPadding: const EdgeInsets.all(16),
       children: [
         Row(
           children: [
-            const Text("Language: "),
+            Text(S.of(context).language),
             DropdownButton<String>(
               value: settings.language,
               items: const [
@@ -41,13 +43,13 @@ class SettingsDialog extends ConsumerWidget {
           onPressed: () async {
             final bool? shouldReset = await showYesNoDialog(
               context,
-              'Do you really want to reset the statistics?',
+              S.of(context).resetStatisticsQuestion,
             );
             if (shouldReset ?? false) {
               ref.read(statisticsProvider.notifier).reset();
             }
           },
-          child: const Text("Reset Statistics"),
+          child: Text(S.of(context).resetStatistics),
         ),
       ],
     );
@@ -60,15 +62,16 @@ class SettingsDialog extends ConsumerWidget {
       builder: (context) {
         return AlertDialog(
           content: Text(question),
+          actionsAlignment: MainAxisAlignment.center,
           actions: [
             ElevatedButton(
-              child: const Text("Yes"),
+              child: Text(S.of(context).yes),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop(true);
               },
             ),
             ElevatedButton(
-              child: const Text("No"),
+              child: Text(S.of(context).no),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop(false);
               },

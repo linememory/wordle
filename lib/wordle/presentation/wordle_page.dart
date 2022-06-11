@@ -3,6 +3,7 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wordle/core/presentation/routes/app_router.gr.dart';
+import 'package:wordle/generated/l10n.dart';
 import 'package:wordle/settings/presentation/settings_dialog.dart';
 import 'package:wordle/wordle/domain/guess.dart';
 import 'package:wordle/wordle/presentation/guess_widget.dart';
@@ -17,7 +18,7 @@ class WordlePage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Wordle",
+          S.of(context).title,
           style: Theme.of(context).textTheme.headline3,
         ),
         actions: [
@@ -70,7 +71,7 @@ class Game extends ConsumerWidget {
         game: (value) {
           return [
             Text(
-              "Guess the word",
+              S.of(context).gameTip,
               style: Theme.of(context).textTheme.headline4,
             ),
             Expanded(
@@ -99,7 +100,7 @@ class Game extends ConsumerWidget {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "You Guessed it!",
+                              S.of(context).guessed,
                               style: Theme.of(context).textTheme.headline5,
                               textAlign: TextAlign.center,
                             ),
@@ -109,7 +110,7 @@ class Game extends ConsumerWidget {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "GameOver",
+                              S.of(context).gameOver,
                               style: Theme.of(context).textTheme.headline4,
                             ),
                           ),
@@ -132,13 +133,13 @@ class Game extends ConsumerWidget {
               onPressed: () {
                 ref.read(wordleProvider.notifier).startGame();
               },
-              child: const Text('Play Again!'),
+              child: Text(S.of(context).playAgain),
             ),
           ];
         },
         failure: (value) {
           return [
-            Text('Failure: ${value.errorMessage}'),
+            Text('${S.of(context).failure}: ${value.errorMessage}'),
             const SizedBox(
               height: 16,
             ),
@@ -146,7 +147,7 @@ class Game extends ConsumerWidget {
               onPressed: () {
                 ref.read(wordleProvider.notifier).startGame();
               },
-              child: const Text('Try Again!'),
+              child: Text(S.of(context).tryAgain),
             ),
           ];
         },
