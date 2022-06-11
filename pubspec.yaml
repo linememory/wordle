@@ -16,8 +16,11 @@ dependencies:
   flip_card: ^0.6.0
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   freezed_annotation: ^2.0.3
   hooks_riverpod: ^1.0.4
+  intl: ^0.17.0
   json_annotation: ^4.5.0
   shared_preferences: ^2.0.15
 
@@ -35,3 +38,5 @@ flutter:
   assets:
     - assets/dictionaries/
     - assets/words/
+flutter_intl:
+  enabled: true
