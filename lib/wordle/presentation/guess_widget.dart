@@ -1,3 +1,4 @@
+import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:wordle/wordle/domain/guess.dart';
 
@@ -7,12 +8,15 @@ class GuessWidget extends StatelessWidget {
     required this.guess,
     required this.isInvalid,
     required this.isSubmitted,
+    required this.flipCardKeys,
   }) : super(key: key);
 
   final Guess guess;
 
   final bool isInvalid;
   final bool isSubmitted;
+
+  final List<GlobalKey<FlipCardState>> flipCardKeys;
 
   @override
   Widget build(BuildContext context) {
@@ -22,22 +26,39 @@ class GuessWidget extends StatelessWidget {
         Flexible(
           child: AspectRatio(
             aspectRatio: 1,
-            child: Container(
-              alignment: Alignment.center,
-              color: isSubmitted ? Colors.grey.shade600 : Colors.grey.shade800,
-              child: Text(
-                guess.word.length > i ? guess.word[i].toUpperCase() : "",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 26,
-                  color: isInvalid
-                      ? Colors.red
-                      : guess.match[i] == LetterMatch.match
-                          ? Colors.green
-                          : guess.match[i] == LetterMatch.wrongPosition
-                              ? Colors.yellow
-                              : Colors.grey,
+            child: FlipCard(
+              key: flipCardKeys[i],
+              direction: FlipDirection.VERTICAL,
+              front: Container(
+                alignment: Alignment.center,
+                color: Colors.grey.shade800,
+                child: Text(
+                  guess.word.length > i ? guess.word[i].toUpperCase() : "",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 26,
+                    color: isInvalid ? Colors.red : Colors.grey,
+                  ),
+                ),
+              ),
+              back: Container(
+                alignment: Alignment.center,
+                color: Colors.grey.shade600,
+                child: Text(
+                  guess.word.length > i ? guess.word[i].toUpperCase() : "",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 26,
+                    color: isInvalid
+                        ? Colors.red
+                        : guess.match[i] == LetterMatch.match
+                            ? Colors.green
+                            : guess.match[i] == LetterMatch.wrongPosition
+                                ? Colors.yellow
+                                : Colors.grey,
+                  ),
                 ),
               ),
             ),

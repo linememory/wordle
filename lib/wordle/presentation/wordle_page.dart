@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wordle/core/presentation/routes/app_router.gr.dart';
@@ -39,19 +40,11 @@ class WordlePage extends ConsumerWidget {
           ),
         ],
       ),
-      body: SafeArea(
+      body: const SafeArea(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Text(
-                  "Guess the word",
-                  style: Theme.of(context).textTheme.headline4,
-                ),
-                const Game(),
-              ],
-            ),
+            padding: EdgeInsets.all(8.0),
+            child: Game(),
           ),
         ),
       ),
@@ -67,117 +60,134 @@ class Game extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wordle = ref.watch(wordleProvider);
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: wordle.map(
-          initial: (value) {
-            ref.read(wordleProvider.notifier).startGame();
-            return [const CircularProgressIndicator()];
-          },
-          game: (value) {
-            return [
-              Expanded(
-                flex: 2,
-                child: Guesses(value.guesses),
-              ),
-              Expanded(
-                child: WordleKeyboard(
-                  onKeyPress: (text) {
-                    ref.read(wordleProvider.notifier).inputLetter(text);
-                  },
-                  onBackSpacePress: () {
-                    ref.read(wordleProvider.notifier).removeLetter();
-                  },
-                ),
-              ),
-            ];
-          },
-          gameOver: (value) {
-            return [
-              Expanded(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "GameOver",
-                        style: Theme.of(context).textTheme.headline4,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        value.hasGuessed
-                            ? "You Guessed it!"
-                            : "Too bad... you didn't guess the word.",
-                        style: Theme.of(context).textTheme.headline5,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        value.word.toUpperCase(),
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline4!
-                            .copyWith(color: Colors.green),
-                      ),
-                    ),
-                    Expanded(child: Guesses(value.guesses)),
-                  ],
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  ref.read(wordleProvider.notifier).startGame();
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: wordle.map(
+        initial: (value) {
+          ref.read(wordleProvider.notifier).startGame();
+          return [const CircularProgressIndicator()];
+        },
+        game: (value) {
+          return [
+            Text(
+              "Guess the word",
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            Expanded(
+              flex: 2,
+              child: Guesses(value.guesses),
+            ),
+            Expanded(
+              child: WordleKeyboard(
+                onKeyPress: (text) {
+                  ref.read(wordleProvider.notifier).inputLetter(text);
                 },
-                child: const Text('Play Again!'),
-              ),
-            ];
-          },
-          failure: (value) {
-            return [
-              Text('Failure: ${value.errorMessage}'),
-              const SizedBox(
-                height: 16,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  ref.read(wordleProvider.notifier).startGame();
+                onBackSpacePress: () {
+                  ref.read(wordleProvider.notifier).removeLetter();
                 },
-                child: const Text('Try Again!'),
               ),
-            ];
-          },
-        ),
+            ),
+          ];
+        },
+        gameOver: (value) {
+          return [
+            Expanded(
+              child: Column(
+                children: [
+                  ...value.hasGuessed
+                      ? [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "You Guessed it!",
+                              style: Theme.of(context).textTheme.headline5,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ]
+                      : [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "GameOver",
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
+                          ),
+                        ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      value.word.toUpperCase(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline4!
+                          .copyWith(color: Colors.green),
+                    ),
+                  ),
+                  Expanded(child: Guesses(value.guesses)),
+                ],
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                ref.read(wordleProvider.notifier).startGame();
+              },
+              child: const Text('Play Again!'),
+            ),
+          ];
+        },
+        failure: (value) {
+          return [
+            Text('Failure: ${value.errorMessage}'),
+            const SizedBox(
+              height: 16,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                ref.read(wordleProvider.notifier).startGame();
+              },
+              child: const Text('Try Again!'),
+            ),
+          ];
+        },
       ),
     );
   }
 }
 
-class Guesses extends StatelessWidget {
+class Guesses extends ConsumerWidget {
   const Guesses(this.guesses, {Key? key}) : super(key: key);
   final List<Guess> guesses;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final List<List<GlobalKey<FlipCardState>>> keys =
+        ref.watch(flipCardKeysProvider);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        children: guesses.map((e) {
-          return Flexible(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 4.0),
-              child: GuessWidget(
-                guess: e,
-                isInvalid: e.isInvalid,
-                isSubmitted: e.isSubmitted,
-              ),
-            ),
-          );
-        }).toList(),
+        children: guesses
+            .asMap()
+            .map(
+              (key, value) {
+                return MapEntry(
+                  key,
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 4.0),
+                      child: GuessWidget(
+                        flipCardKeys: keys[key],
+                        guess: value,
+                        isInvalid: value.isInvalid,
+                        isSubmitted: value.isSubmitted,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            )
+            .values
+            .toList(),
       ),
     );
   }
