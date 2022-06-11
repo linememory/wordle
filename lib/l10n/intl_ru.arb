@@ -1,0 +1,22 @@
+{
+    "title": "Вордл",
+    "gameTip" : "Угадай слово", 
+    "guessed" : "Вы угадали!",
+    "gameOver": "Игра закончена",
+    "playAgain": "Играть снова",
+    "failure": "Отказ",
+    "tryAgain": "Попробуйте еще раз",
+
+    "statistics": "Статистика",
+    "gamesPlayed": "Игр сыграно",
+    "gamesWon": "Игры выиграны",
+    "currentStreak": "Текущая серия",
+    "longestStreak": "Самая длинная серия",
+
+    "settings": "Настройки",
+    "language": "Язык",
+    "resetStatistics": "Сбросить статистику",
+    "resetStatisticsQuestion": "Вы действительно хотите сбросить статистику?",
+    "yes": "Да",
+    "no": "Нет"
+}
