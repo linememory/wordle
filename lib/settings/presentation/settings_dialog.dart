@@ -32,6 +32,10 @@ class SettingsDialog extends ConsumerWidget {
                   value: 'it',
                   child: Text('Italiano'),
                 ),
+                DropdownMenuItem(
+                  value: 'ru',
+                  child: Text('Русский'),
+                ),
               ],
               onChanged: (value) {
                 ref.read(settingsProvider.notifier).setLanguage(value ?? 'en');

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wordle/settings/shared/providers.dart';
 import 'package:wordle/wordle/domain/guess.dart';
 import 'package:wordle/wordle/shared/providers.dart';
 
@@ -18,9 +19,9 @@ class WordleKeyboard extends ConsumerWidget {
       ['z', 'x', 'c', 'v', 'b', 'n', 'm', '\b']
     ],
     'de': [
-      ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+      ['q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p'],
       ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-      ['z', 'x', 'c', 'v', 'b', 'n', 'm', '\b']
+      ['y', 'x', 'c', 'v', 'b', 'n', 'm', '\b']
     ],
     'ru': [
       ['ё', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ'],
@@ -35,12 +36,14 @@ class WordleKeyboard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final keyboardState = ref.watch(keyboardProvider);
+    final settings = ref.watch(settingsProvider);
+    final List<List<String>> keyboard = keys[settings.language] ?? keys['en']!;
     return AspectRatio(
       aspectRatio: 2,
       child: Container(
         padding: const EdgeInsets.all(4.0),
         child: Column(
-          children: keys['en']!.map((e) {
+          children: keyboard.map((e) {
             return Flexible(
               child: Row(
                 children: e.map((e) {

@@ -20,6 +20,8 @@ final wordsAssetPathProvider = Provider<String>((ref) {
       return 'assets/words/de.txt';
     case 'it':
       return 'assets/words/it.txt';
+    case 'ru':
+      return 'assets/words/ru.txt';
   }
   return 'assets/words/en.txt';
 });
@@ -45,6 +47,8 @@ final dictionaryAssetPathProvider = Provider<String>((ref) {
       return 'assets/dictionaries/de.txt';
     case 'it':
       return 'assets/dictionaries/it.txt';
+    case 'ru':
+      return 'assets/dictionaries/ru.txt';
   }
   return 'assets/dictionaries/en.txt';
 });

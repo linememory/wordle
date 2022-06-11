@@ -24,7 +24,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
 
 @freezed
 class SettingsState with _$SettingsState {
-  static const supportedLanguages = ['en', 'de', 'it'];
+  static const supportedLanguages = ['en', 'de', 'it', 'ru'];
   const factory SettingsState({@Default('en') String language}) =
       _SettingsState;
 
