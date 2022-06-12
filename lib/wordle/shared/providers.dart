@@ -1,6 +1,7 @@
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wordle/generated/l10n.dart';
 import 'package:wordle/settings/shared/providers.dart';
 import 'package:wordle/statistics/shared/providers.dart';
 import 'package:wordle/wordle/application/flip_card_keys_notifier.dart';
@@ -11,24 +12,17 @@ import 'package:wordle/wordle/infrastructure/dictionary_repository.dart';
 import 'package:wordle/wordle/infrastructure/words_datasource.dart';
 import 'package:wordle/wordle/infrastructure/words_repository.dart';
 
-final wordsAssetPathProvider = Provider<String>((ref) {
+final languageFileNameProvider = Provider<String>((ref) {
   final settings = ref.watch(settingsProvider);
-  switch (settings.language) {
-    case 'en':
-      return 'assets/words/en.txt';
-    case 'de':
-      return 'assets/words/de.txt';
-    case 'it':
-      return 'assets/words/it.txt';
-    case 'ru':
-      return 'assets/words/ru.txt';
+  if (S.delegate.supportedLocales.contains(Locale(settings.language))) {
+    return settings.language;
   }
-  return 'assets/words/en.txt';
+  return 'en';
 });
 
 final wordsDatasourceProvider = Provider<WordsDatasource>((ref) {
   return FileWordsDatasource(
-    ref.watch(wordsAssetPathProvider),
+    'assets/words/${ref.watch(languageFileNameProvider)}.txt',
   );
 });
 
@@ -38,24 +32,9 @@ final wordsRepositoryProvider = Provider<WordsRepository>((ref) {
   );
 });
 
-final dictionaryAssetPathProvider = Provider<String>((ref) {
-  final settings = ref.watch(settingsProvider);
-  switch (settings.language) {
-    case 'en':
-      return 'assets/dictionaries/en.txt';
-    case 'de':
-      return 'assets/dictionaries/de.txt';
-    case 'it':
-      return 'assets/dictionaries/it.txt';
-    case 'ru':
-      return 'assets/dictionaries/ru.txt';
-  }
-  return 'assets/dictionaries/en.txt';
-});
-
 final dictionaryDatasourceProvider = Provider<DictionaryDatasource>((ref) {
   return FileDictionaryDatasource(
-    ref.watch(dictionaryAssetPathProvider),
+    'assets/dictionaries/${ref.watch(languageFileNameProvider)}.txt',
   );
 });
 
