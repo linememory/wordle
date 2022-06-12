@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wordle/generated/l10n.dart';
 import 'package:wordle/settings/infrastructure/settings_repository.dart';
 
 part 'settings_notifier.freezed.dart';
@@ -15,7 +17,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
   }
 
   void setLanguage(String language) {
-    if (SettingsState.supportedLanguages.contains(language)) {
+    if (S.delegate.supportedLocales.contains(Locale(language))) {
       state = state.copyWith(language: language);
       _settingsRepository.save(state);
     }
@@ -24,7 +26,6 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
 
 @freezed
 class SettingsState with _$SettingsState {
-  static const supportedLanguages = ['en', 'de', 'it', 'ru'];
   const factory SettingsState({@Default('en') String language}) =
       _SettingsState;
 
