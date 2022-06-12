@@ -16,8 +16,8 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     state = await _settingsRepository.load();
   }
 
-  void setLanguage(String language) {
-    if (S.delegate.supportedLocales.contains(Locale(language))) {
+  void setLanguage(Locale language) {
+    if (S.delegate.supportedLocales.contains(language)) {
       state = state.copyWith(language: language);
       _settingsRepository.save(state);
     }
@@ -26,9 +26,23 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
 
 @freezed
 class SettingsState with _$SettingsState {
-  const factory SettingsState({@Default('en') String language}) =
+  const factory SettingsState(
+          {@Default(Locale('en')) @LocaleConverter() Locale language}) =
       _SettingsState;
 
   factory SettingsState.fromJson(Map<String, Object?> json) =>
       _$SettingsStateFromJson(json);
+}
+
+class LocaleConverter implements JsonConverter<Locale, Map<String, dynamic>> {
+  const LocaleConverter();
+
+  @override
+  Locale fromJson(Map<String, dynamic> locale) {
+    return Locale((locale['language'] ?? 'en') as String);
+  }
+
+  @override
+  Map<String, dynamic> toJson(Locale locale) =>
+      {'language': locale.languageCode};
 }

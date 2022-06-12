@@ -25,7 +25,7 @@ class App extends ConsumerWidget {
       theme: ThemeData.dark(),
       routerDelegate: appRouter.delegate(),
       routeInformationParser: appRouter.defaultRouteParser(),
-      locale: Locale(settings.language),
+      locale: settings.language,
       localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,

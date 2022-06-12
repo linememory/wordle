@@ -20,7 +20,8 @@ SettingsState _$SettingsStateFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SettingsState {
-  String get language => throw _privateConstructorUsedError;
+  @LocaleConverter()
+  Locale get language => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -33,7 +34,7 @@ abstract class $SettingsStateCopyWith<$Res> {
   factory $SettingsStateCopyWith(
           SettingsState value, $Res Function(SettingsState) then) =
       _$SettingsStateCopyWithImpl<$Res>;
-  $Res call({String language});
+  $Res call({@LocaleConverter() Locale language});
 }
 
 /// @nodoc
@@ -53,7 +54,7 @@ class _$SettingsStateCopyWithImpl<$Res>
       language: language == freezed
           ? _value.language
           : language // ignore: cast_nullable_to_non_nullable
-              as String,
+              as Locale,
     ));
   }
 }
@@ -65,7 +66,7 @@ abstract class _$$_SettingsStateCopyWith<$Res>
           _$_SettingsState value, $Res Function(_$_SettingsState) then) =
       __$$_SettingsStateCopyWithImpl<$Res>;
   @override
-  $Res call({String language});
+  $Res call({@LocaleConverter() Locale language});
 }
 
 /// @nodoc
@@ -87,7 +88,7 @@ class __$$_SettingsStateCopyWithImpl<$Res>
       language: language == freezed
           ? _value.language
           : language // ignore: cast_nullable_to_non_nullable
-              as String,
+              as Locale,
     ));
   }
 }
@@ -95,14 +96,16 @@ class __$$_SettingsStateCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_SettingsState implements _SettingsState {
-  const _$_SettingsState({this.language = 'en'});
+  const _$_SettingsState(
+      {@LocaleConverter() this.language = const Locale('en')});
 
   factory _$_SettingsState.fromJson(Map<String, dynamic> json) =>
       _$$_SettingsStateFromJson(json);
 
   @override
   @JsonKey()
-  final String language;
+  @LocaleConverter()
+  final Locale language;
 
   @override
   String toString() {
@@ -134,13 +137,15 @@ class _$_SettingsState implements _SettingsState {
 }
 
 abstract class _SettingsState implements SettingsState {
-  const factory _SettingsState({final String language}) = _$_SettingsState;
+  const factory _SettingsState({@LocaleConverter() final Locale language}) =
+      _$_SettingsState;
 
   factory _SettingsState.fromJson(Map<String, dynamic> json) =
       _$_SettingsState.fromJson;
 
   @override
-  String get language => throw _privateConstructorUsedError;
+  @LocaleConverter()
+  Locale get language => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$$_SettingsStateCopyWith<_$_SettingsState> get copyWith =>

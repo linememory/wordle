@@ -37,7 +37,7 @@ class WordleKeyboard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final keyboardState = ref.watch(keyboardProvider);
     final settings = ref.watch(settingsProvider);
-    final List<List<String>> keyboard = keys[settings.language] ?? keys['en']!;
+    final List<List<String>> keyboard = keys[settings.language.languageCode] ?? keys['en']!;
     return AspectRatio(
       aspectRatio: 2,
       child: Container(

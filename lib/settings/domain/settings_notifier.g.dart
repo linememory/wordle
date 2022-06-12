@@ -1,7 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: non_constant_identifier_names
-
 part of 'settings_notifier.dart';
 
 // **************************************************************************
@@ -10,10 +8,13 @@ part of 'settings_notifier.dart';
 
 _$_SettingsState _$$_SettingsStateFromJson(Map<String, dynamic> json) =>
     _$_SettingsState(
-      language: json['language'] as String? ?? 'en',
+      language: json['language'] == null
+          ? const Locale('en')
+          : const LocaleConverter()
+              .fromJson(json['language'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_SettingsStateToJson(_$_SettingsState instance) =>
     <String, dynamic>{
-      'language': instance.language,
+      'language': const LocaleConverter().toJson(instance.language),
     };

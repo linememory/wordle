@@ -17,28 +17,30 @@ class SettingsDialog extends ConsumerWidget {
         Row(
           children: [
             Text(S.of(context).language),
-            DropdownButton<String>(
+            DropdownButton<Locale>(
               value: settings.language,
               items: const [
                 DropdownMenuItem(
-                  value: 'en',
+                  value: Locale('en'),
                   child: Text('English'),
                 ),
                 DropdownMenuItem(
-                  value: 'de',
+                  value: Locale('de'),
                   child: Text('Deutsch'),
                 ),
                 DropdownMenuItem(
-                  value: 'it',
+                  value: Locale('it'),
                   child: Text('Italiano'),
                 ),
                 DropdownMenuItem(
-                  value: 'ru',
+                  value: Locale('ru'),
                   child: Text('Русский'),
                 ),
               ],
               onChanged: (value) {
-                ref.read(settingsProvider.notifier).setLanguage(value ?? 'en');
+                ref
+                    .read(settingsProvider.notifier)
+                    .setLanguage(value ?? const Locale('en'));
               },
             ),
           ],

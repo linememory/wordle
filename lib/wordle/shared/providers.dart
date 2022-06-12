@@ -12,12 +12,12 @@ import 'package:wordle/wordle/infrastructure/dictionary_repository.dart';
 import 'package:wordle/wordle/infrastructure/words_datasource.dart';
 import 'package:wordle/wordle/infrastructure/words_repository.dart';
 
-final languageFileNameProvider = Provider<String>((ref) {
+final languageFileNameProvider = Provider<Locale>((ref) {
   final settings = ref.watch(settingsProvider);
-  if (S.delegate.supportedLocales.contains(Locale(settings.language))) {
+  if (S.delegate.supportedLocales.contains(settings.language)) {
     return settings.language;
   }
-  return 'en';
+  return const Locale('en');
 });
 
 final wordsDatasourceProvider = Provider<WordsDatasource>((ref) {
