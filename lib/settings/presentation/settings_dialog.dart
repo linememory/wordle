@@ -16,7 +16,13 @@ class SettingsDialog extends ConsumerWidget {
       children: [
         Row(
           children: [
-            Text(S.of(context).language),
+            Text(
+              '${S.of(context).language}: ',
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(
+              width: 4,
+            ),
             DropdownButton<Locale>(
               value: settings.language,
               items: const [
