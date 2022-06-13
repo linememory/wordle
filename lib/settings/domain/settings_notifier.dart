@@ -26,9 +26,9 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
 
 @freezed
 class SettingsState with _$SettingsState {
-  const factory SettingsState(
-          {@Default(Locale('en')) @LocaleConverter() Locale language}) =
-      _SettingsState;
+  const factory SettingsState({
+    @Default(Locale('en')) @LocaleConverter() Locale language,
+  }) = _SettingsState;
 
   factory SettingsState.fromJson(Map<String, Object?> json) =>
       _$SettingsStateFromJson(json);
