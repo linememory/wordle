@@ -23,6 +23,11 @@ class WordleKeyboard extends ConsumerWidget {
       ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
       ['y', 'x', 'c', 'v', 'b', 'n', 'm', '\b']
     ],
+    'it': [
+      ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+      ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+      ['z', 'x', 'c', 'v', 'b', 'n', 'm', '\b']
+    ],
     'ru': [
       ['ё', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ'],
       ['ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э'],
@@ -37,7 +42,8 @@ class WordleKeyboard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final keyboardState = ref.watch(keyboardProvider);
     final settings = ref.watch(settingsProvider);
-    final List<List<String>> keyboard = keys[settings.language.languageCode] ?? keys['en']!;
+    final List<List<String>> keyboard =
+        keys[settings.language.languageCode] ?? keys['en']!;
     return AspectRatio(
       aspectRatio: 2,
       child: Container(
@@ -105,8 +111,6 @@ class KeyboardKey extends StatelessWidget {
           onTab();
         },
         child: Container(
-          // width: 20,
-          //height: 60,
           margin: const EdgeInsets.all(2),
           decoration: BoxDecoration(
             color: color ?? Theme.of(context).colorScheme.background,
