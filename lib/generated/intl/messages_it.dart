@@ -23,22 +23,23 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "currentStreak":
-            MessageLookupByLibrary.simpleMessage("Striscia attuale"),
-        "failure": MessageLookupByLibrary.simpleMessage("Fallimento"),
+            MessageLookupByLibrary.simpleMessage("Striscia vincente attuale"),
+        "failure": MessageLookupByLibrary.simpleMessage("Errore"),
         "gameOver": MessageLookupByLibrary.simpleMessage("Fine del gioco"),
         "gameTip": MessageLookupByLibrary.simpleMessage("indovina la parola"),
         "gamesPlayed": MessageLookupByLibrary.simpleMessage("Giochi giocati"),
         "gamesWon": MessageLookupByLibrary.simpleMessage("Giochi vinti"),
-        "guessed": MessageLookupByLibrary.simpleMessage("Hai indovinato!"),
+        "guessed":
+            MessageLookupByLibrary.simpleMessage("Hai indovinato la parola!"),
         "language": MessageLookupByLibrary.simpleMessage("Lingua"),
         "longestStreak":
-            MessageLookupByLibrary.simpleMessage("Striscia più lunga"),
+            MessageLookupByLibrary.simpleMessage("Striscia vincente più lunga"),
         "no": MessageLookupByLibrary.simpleMessage("No"),
-        "playAgain": MessageLookupByLibrary.simpleMessage("Gioca di nuovo"),
+        "playAgain": MessageLookupByLibrary.simpleMessage("Riprova"),
         "resetStatistics":
-            MessageLookupByLibrary.simpleMessage("Ripristina statistiche"),
+            MessageLookupByLibrary.simpleMessage("Ripristinare statistiche"),
         "resetStatisticsQuestion": MessageLookupByLibrary.simpleMessage(
-            "Volete davvero ripristinare  le statistiche?"),
+            "Vuole davvero ripristinare le statistiche?"),
         "settings": MessageLookupByLibrary.simpleMessage("Impostazioni"),
         "statistics": MessageLookupByLibrary.simpleMessage("Statistiche"),
         "title": MessageLookupByLibrary.simpleMessage("Wordle"),
