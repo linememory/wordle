@@ -29,6 +29,7 @@ class GuessWidget extends StatelessWidget {
             child: FlipCard(
               key: flipCardKeys[i],
               direction: FlipDirection.VERTICAL,
+              flipOnTouch: false,
               front: Container(
                 alignment: Alignment.center,
                 color: Colors.grey.shade800,
