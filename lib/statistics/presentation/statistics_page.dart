@@ -26,62 +26,66 @@ class StatisticsPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(S.of(context).statistics)),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Card(
-                child: Column(
-                  children: [
-                    ListTile(
-                      visualDensity: density,
-                      leading: Text("${S.of(context).gamesPlayed}: "),
-                      title: Text(statistics.games.toString()),
-                    ),
-                    ListTile(
-                      visualDensity: density,
-                      leading: Text("${S.of(context).gamesWon}: "),
-                      title: Text(
-                        '${((statistics.games - statistics.results[statistics.results.length - 1]) * 100 / (statistics.games + 0.00001)).ceil()}%',
+        child: Center(
+          child: Container(
+            constraints: BoxConstraints.loose(const Size(800, double.infinity)),
+            alignment: Alignment.topCenter,
+            padding: const EdgeInsets.all(32.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Card(
+                  child: Column(
+                    children: [
+                      ListTile(
+                        visualDensity: density,
+                        leading: Text("${S.of(context).gamesPlayed}: "),
+                        title: Text(statistics.games.toString()),
                       ),
-                    ),
-                    ListTile(
-                      visualDensity: density,
-                      leading: Text("${S.of(context).currentStreak}: "),
-                      title: Text(
-                        statistics.streak.toString(),
+                      ListTile(
+                        visualDensity: density,
+                        leading: Text("${S.of(context).gamesWon}: "),
+                        title: Text(
+                          '${((statistics.games - statistics.results[statistics.results.length - 1]) * 100 / (statistics.games + 0.00001)).ceil()}%',
+                        ),
                       ),
-                    ),
-                    ListTile(
-                      visualDensity: density,
-                      leading: Text("${S.of(context).longestStreak}: "),
-                      title: Text(
-                        statistics.longestStreak.toString(),
+                      ListTile(
+                        visualDensity: density,
+                        leading: Text("${S.of(context).currentStreak}: "),
+                        title: Text(
+                          statistics.streak.toString(),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Card(
-                child: Center(
-                  child: Bars(
-                    bars: statistics.results
-                        .sublist(0, statistics.results.length - 1)
-                        .asMap()
-                        .entries
-                        .map(
-                          (e) => BarData(
-                            (e.key + 1).toString(),
-                            e.value,
-                            colors[e.key],
-                          ),
-                        )
-                        .toList(),
+                      ListTile(
+                        visualDensity: density,
+                        leading: Text("${S.of(context).longestStreak}: "),
+                        title: Text(
+                          statistics.longestStreak.toString(),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
+                Card(
+                  child: Center(
+                    child: Bars(
+                      bars: statistics.results
+                          .sublist(0, statistics.results.length - 1)
+                          .asMap()
+                          .entries
+                          .map(
+                            (e) => BarData(
+                              (e.key + 1).toString(),
+                              e.value,
+                              colors[e.key],
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
