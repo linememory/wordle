@@ -27,10 +27,11 @@ class StatisticsPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            onPressed: () {
-              ref.watch(appRouterProvider).navigateBack();
-            },
-            icon: const Icon(Icons.arrow_back)),
+          onPressed: () {
+            ref.watch(appRouterProvider).navigateBack();
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
         title: Text(S.of(context).statistics),
       ),
       body: SafeArea(
