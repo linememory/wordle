@@ -64,7 +64,7 @@ class WordleKeyboard extends ConsumerWidget {
                   final Color color = match == null
                       ? Theme.of(context).backgroundColor
                       : match == LetterMatch.wrongPosition
-                          ? Colors.yellow
+                          ? Colors.amber
                           : match == LetterMatch.match
                               ? Colors.green
                               : Colors.grey;

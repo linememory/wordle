@@ -97,6 +97,8 @@ class _Bar extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               value.toString(),
+              style: const TextStyle(
+                  shadows: [Shadow(blurRadius: 1, offset: Offset(1, 1))]),
             ),
           ),
         ),

@@ -57,7 +57,7 @@ class GuessWidget extends StatelessWidget {
                         : guess.match[i] == LetterMatch.match
                             ? Colors.green
                             : guess.match[i] == LetterMatch.wrongPosition
-                                ? Colors.yellow
+                                ? Colors.amber
                                 : Colors.grey,
                   ),
                 ),
