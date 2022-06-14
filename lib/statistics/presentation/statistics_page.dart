@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wordle/core/presentation/app.dart';
 import 'package:wordle/generated/l10n.dart';
 import 'package:wordle/statistics/presentation/bars.dart';
 import 'package:wordle/statistics/shared/providers.dart';
@@ -24,7 +25,14 @@ class StatisticsPage extends ConsumerWidget {
       vertical: VisualDensity.minimumDensity,
     );
     return Scaffold(
-      appBar: AppBar(title: Text(S.of(context).statistics)),
+      appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              ref.watch(appRouterProvider).navigateBack();
+            },
+            icon: const Icon(Icons.arrow_back)),
+        title: Text(S.of(context).statistics),
+      ),
       body: SafeArea(
         child: Center(
           child: Container(
