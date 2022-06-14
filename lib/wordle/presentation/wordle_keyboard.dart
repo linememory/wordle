@@ -44,8 +44,8 @@ class WordleKeyboard extends ConsumerWidget {
     final settings = ref.watch(settingsProvider);
     final List<List<String>> keyboard =
         keys[settings.language.languageCode] ?? keys['en']!;
-    return AspectRatio(
-      aspectRatio: 2,
+    return ConstrainedBox(
+      constraints: BoxConstraints.loose(const Size(1200, double.infinity)),
       child: Container(
         padding: const EdgeInsets.all(4.0),
         child: Column(
